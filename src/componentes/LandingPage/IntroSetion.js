@@ -1,16 +1,16 @@
 import React from "react";
-import "./style.css";
-import Logo from "./LogoSinFondo.png";
+import "../../style.css";
+import Logo from "../../img/LogoSinFondo.png";
 export default class IntroSetion extends React.Component {
   render() {
     return (
-      <section id="intro" class="clearfix">
-        <div class="container">
-          <div class="intro-img">
-            <img src={Logo} class="img-fluid" />
+      <section id="intro" className="clearfix">
+        <div className="container">
+          <div className="intro-img">
+            <img src={Logo} className="img-fluid" alt="" />
           </div>
 
-          <div class="intro-info">
+          <div className="intro-info">
             <h2>
               Descubre la
               <br />
@@ -19,10 +19,10 @@ export default class IntroSetion extends React.Component {
               de cocinar
             </h2>
             <div>
-              <a href="#sabermas" class="btn-get-started scrollto">
+              <a href="#sabermas" className="btn-get-started scrollto">
                 Saber Mas
               </a>
-              <a href="#beneficios" class="btn-beneficios scrollto">
+              <a href="#beneficios" className="btn-beneficios scrollto">
                 Beneficios
               </a>
             </div>

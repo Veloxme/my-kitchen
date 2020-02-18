@@ -1,17 +1,23 @@
 import React from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
+
+import PrivateRoute from "./auth";
+import PublicRoute from "./Withoutauth";
+
 import Layout from "./Layout";
-import IntroSetion from "./IntroSetion";
-import SaberMas from "./SaberMas";
-import Beneficios from "./Beneficios";
+import LandingPage from "./pages/LandingPage";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
   return (
     <BrowserRouter>
       <Layout>
-        <IntroSetion />
-        <SaberMas />
-        <Beneficios />
+        <Switch>
+          <Route exact path="/" component={LandingPage} />
+          <PublicRoute exact path="/Login" component={Login} />
+          <PublicRoute exact path="/Register" component={Register} />
+        </Switch>
       </Layout>
     </BrowserRouter>
   );
