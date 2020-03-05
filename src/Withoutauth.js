@@ -20,7 +20,7 @@ const PublicRoute = ({ component: Component, ...rest }) => {
           <Redirect
             to={{
               pathname: "/",
-              state: { message: "Usuário não autorizado" }
+              state: { message: "Usuário no autorizado" }
             }}
           />
         )

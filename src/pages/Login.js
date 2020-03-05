@@ -6,7 +6,7 @@ export default class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: "",
+      email: "",
       password: ""
     };
   }
@@ -21,43 +21,39 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <div id="log" className="container">
+      <div id="log" className="container-fluid">
         <div className="row ">
           <h1 className="mx-auto mt-4 mb-1">Login</h1>
-          <div className="col-12">
-            <div className="col-md-4 offset-4">
-              <form onSubmit={this.signIn}>
-                <div class="form-group">
-                  <label>Email</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="email"
-                    name="email"
-                    onChange={this.changeHandler}
-                  />
-                </div>
-                <div class="form-group">
-                  <label>Password</label>
-                  <input
-                    type="password"
-                    class="form-control"
-                    id="password"
-                    name="password"
-                    onChange={this.changeHandler}
-                  />
-                </div>
-                <button class="btn btn-outline-light">Iniciar sesion</button>
-                <Link
-                  to="/Register"
-                  class="btn btn-outline-secondary ml-3 btn-sm"
-                >
-                  Registrate
-                </Link>
-              </form>
-            </div>
-          </div>
         </div>
+        <form className="col-4 mx-auto" onSubmit={this.signIn}>
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              type="text"
+              className="form-control"
+              id="email"
+              name="email"
+              onChange={this.changeHandler}
+            />
+          </div>
+          <div className="form-group">
+            <label>Password</label>
+            <input
+              type="password"
+              className="form-control"
+              id="password"
+              name="password"
+              onChange={this.changeHandler}
+            />
+          </div>
+          <button className="btn btn-outline-light">Iniciar sesion</button>
+          <Link
+            to="/Register"
+            className="btn btn-outline-secondary ml-3 btn-sm"
+          >
+            Registrate
+          </Link>
+        </form>
       </div>
     );
   }

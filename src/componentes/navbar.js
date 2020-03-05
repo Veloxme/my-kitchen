@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "../includes/bootstrap";
 import "../style.css";
-import "../animate.css";
 import Logo from "../img/LogoSinFondo1.png";
 
 export default class Navbar extends React.Component {
@@ -17,9 +16,15 @@ export default class Navbar extends React.Component {
           </div>
           <nav className="main-nav float-right d-none d-lg-block">
             <ul>
-              <li className="active">
-                <Link to="/Login">Ingresar</Link>
-              </li>
+              {localStorage.getItem("token") === null ? (
+                <li className="active">
+                  <Link to="/Login">Ingresar</Link>
+                </li>
+              ) : (
+                <li className="active">
+                  <Link to="/Login">Logout</Link>
+                </li>
+              )}
             </ul>
           </nav>
         </div>

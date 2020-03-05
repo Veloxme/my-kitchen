@@ -12,20 +12,10 @@ export default class IntroSetion extends React.Component {
 
           <div className="intro-info">
             <h2>
-              Descubre la
+              Descargalo
               <br />
-              nueva forma
-              <br />
-              de cocinar
+              pronto
             </h2>
-            <div>
-              <a href="#sabermas" className="btn-get-started scrollto">
-                Saber Mas
-              </a>
-              <a href="#beneficios" className="btn-beneficios scrollto">
-                Beneficios
-              </a>
-            </div>
           </div>
         </div>
       </section>
