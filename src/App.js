@@ -19,7 +19,7 @@ export default function App() {
           <PublicRoute exact path="/" component={LandingPage} />
           <PublicRoute exact path="/Login" component={Login} />
           <PublicRoute exact path="/Register" component={Register} />
-          <PublicRoute exact path="/Index" component={Forms} />
+          <PrivateRoute exact path="/Index" component={Forms} />
           <PublicRoute exact path="/Sprint" component={Sprint} />
         </Switch>
       </Layout>

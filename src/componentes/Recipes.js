@@ -3,21 +3,16 @@ import "../includes/bootstrap";
 import "../font-awesome/css/font-awesome.min.css";
 import swal from "sweetalert";
 
-export default class Products extends React.Component {
+export default class Recipes extends React.Component {
   state = {
     loading: false,
     error: null,
-    categorys: [],
-    units: [],
+    difficulties: [],
+    tags: [],
     name: "",
-    category: "",
-    presentation: "",
-    equivalence: "",
-    expiration: "",
-    unit: "",
-    steps: "",
-    negligible: "",
-    image: ""
+    difficulty: "",
+    time: "",
+    calories: ""
   };
   componentDidMount() {
     this.fetchCaregories();
@@ -37,14 +32,14 @@ export default class Products extends React.Component {
     };
     try {
       const response = await fetch(
-        "http://3.219.6.57:5000/system/product-categories",
+        "http://3.219.6.57:5000/system/difficulties",
         requestOptions
       );
-      const catego = await response.json();
-      const categorys = catego.content;
+      const difficul = await response.json();
+      const difficulties = difficul.content;
       this.setState({
         loading: false,
-        categorys
+        difficulties
       });
     } catch (error) {
       this.setState({
@@ -57,14 +52,14 @@ export default class Products extends React.Component {
     }
     try {
       const response = await fetch(
-        "http://3.219.6.57:5000/system/units",
+        "http://3.219.6.57:5000/system/tags",
         requestOptions
       );
-      const unit = await response.json();
-      const units = unit.content;
+      const tag = await response.json();
+      const tags = tag.content;
       this.setState({
         loading: false,
-        units
+        tags
       });
     } catch (error) {
       this.setState({
@@ -75,8 +70,8 @@ export default class Products extends React.Component {
         icon: "error"
       });
     }
-    let combo = document.getElementById("category").value;
-    this.setState({ category: combo });
+    let combo = document.getElementById("difficulty").value;
+    this.setState({ difficulty: combo });
   };
   changeHandler = e => {
     this.setState({ [e.target.name]: e.target.value });
@@ -148,7 +143,7 @@ export default class Products extends React.Component {
     }
     return (
       <div className="card mx-auto mt-4 mb-1 col-md-6">
-        <h1 className=" card-header ">Products</h1>
+        <h1 className=" card-header ">Recipes</h1>
         <form className=" card-body " onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label>Name</label>
@@ -161,104 +156,57 @@ export default class Products extends React.Component {
             />
           </div>
           <div className="form-group">
-            <label>Image</label>
-            <div className="custom-file">
-              <input
-                type="file"
-                name="file"
-                className="custom-file-input"
-                id="file"
-                onChange={this.fileSelectedHandler}
-              />
-              <label className="custom-file-label" htmlFor="file">
-                Choose file
-              </label>
-            </div>
-          </div>
-          <div className="form-group">
-            <label>Category</label>
+            <label>Difficulty</label>
             <select
               className="form-control"
-              id="category"
-              name="category"
+              id="difficulty"
+              name="difficulty"
               onChange={this.changeHandler}
             >
-              {this.state.categorys.map(cat => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
+              {this.state.difficulties.map(dif => (
+                <option key={dif.id} value={dif.id}>
+                  {dif.name}
                 </option>
               ))}
             </select>
           </div>
           <div className="form-group">
-            <label>Presentation</label>
+            <label>Time</label>
             <input
-              type="text"
+              type="number"
               className="form-control"
-              id="presentation"
-              name="presentation"
+              id="time"
+              name="time"
               onChange={this.changeHandler}
             />
           </div>
           <div className="form-group">
-            <label>Equivalence</label>
+            <label>Calories</label>
             <input
               type="number"
               className="form-control"
-              id="equivalence"
-              name="equivalence"
-              onChange={this.changeHandler}
-            />
-          </div>
-          <div className="form-group">
-            <label>Expiration</label>
-            <input
-              type="number"
-              className="form-control"
-              id="expiration"
-              name="expiration"
+              id="calories"
+              name="calories"
               onChange={this.changeHandler}
             />
           </div>
           <div className="row">
             <label className="col-12">Unit</label>
-            {this.state.units.map(unit => (
-              <div
-                key={unit.id}
-                className="form-check form-check-inline col pl-3"
-              >
+            {this.state.tags.map(tag => (
+              <div key={tag.id} className="form-check form-check-inline col">
                 <input
-                  type="radio"
+                  type="checkbox"
                   className="form-check-input"
                   id="unit"
                   name="unit"
-                  value={unit.id}
+                  value={tag.id}
                   onChange={this.changeHandler}
                 />
-                <label>{unit.name}</label>
+                <label>{tag.name}</label>
               </div>
             ))}
           </div>
-          <div className="form-group">
-            <label>Steps</label>
-            <input
-              type="number"
-              className="form-control"
-              id="steps"
-              name="steps"
-              onChange={this.changeHandler}
-            />
-          </div>
-          <div className="form-group">
-            <label>Negligible</label>
-            <input
-              type="number"
-              className="form-control"
-              id="negligible"
-              name="negligible"
-              onChange={this.changeHandler}
-            />
-          </div>
+
           <button className="btn btn-outline-success" disabled={loading}>
             {loading && <i className="fa fa-refresh fa-spin"></i>}Guardar
           </button>

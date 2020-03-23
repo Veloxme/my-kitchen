@@ -5,6 +5,9 @@ import "../style.css";
 import Logo from "../img/LogoSinFondo1.png";
 
 export default class Navbar extends React.Component {
+  closeseccion = () => {
+    localStorage.removeItem("token");
+  };
   render() {
     return (
       <header id="header">
@@ -22,7 +25,9 @@ export default class Navbar extends React.Component {
                 </li>
               ) : (
                 <li className="active">
-                  <Link to="/Login">Logout</Link>
+                  <Link to="/Login" onClick={this.closeseccion}>
+                    Logout
+                  </Link>
                 </li>
               )}
             </ul>

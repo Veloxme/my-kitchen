@@ -134,6 +134,7 @@ h6 {
   box-shadow: 0px 0px 30px rgba(127, 137, 161, 0.3);
 }
 #column {
+  list-style: none;
   transition: all 0.5s;
   z-index: 997;
   transition: all 0.5s;
