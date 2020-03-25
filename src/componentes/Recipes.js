@@ -12,7 +12,10 @@ export default class Recipes extends React.Component {
     name: "",
     difficulty: "",
     time: "",
-    calories: ""
+    calories: "",
+    tag: [],
+    image: "",
+    identidicador: "7"
   };
   componentDidMount() {
     this.fetchCaregories();
@@ -73,19 +76,31 @@ export default class Recipes extends React.Component {
     let combo = document.getElementById("difficulty").value;
     this.setState({ difficulty: combo });
   };
+  fileSelectedHandler = e => {
+    this.setState({ image: e.target.files[0] });
+  };
   changeHandler = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
-  fileSelectedHandler = e => {
-    this.setState({ image: e.target.files[0] });
+  pushHandler = e => {
+    this.state.tag.push(e.target.value);
+  };
+  prueba = e => {
+    e.preventDefault();
+    this.props.history.push(
+      `/Index/Recipes/${this.state.identidicador}/Ingredients`
+    );
   };
   handleSubmit = async e => {
     e.preventDefault();
     this.setState({ loading: true });
     let fd = new FormData();
     fd.append("name", this.state.name);
-    fd.append("productCategory_id", this.state.category);
+    fd.append("difficulty_id", this.state.difficulty);
     fd.append("image", this.state.image);
+    fd.append("time", this.state.time);
+    fd.append("calories", this.state.calories);
+    fd.append("category_id", "1");
     const bearer = "Bearer " + localStorage.getItem("token");
     const requestOptions = {
       method: "POST",
@@ -97,19 +112,13 @@ export default class Recipes extends React.Component {
     };
     try {
       const response = await fetch(
-        "http://3.219.6.57:5000/admin/product",
+        "http://3.219.6.57:5000/admin/recipe",
         requestOptions
       );
       const json = await response.json();
       let id = json.content.id;
+      this.setState({ identidicador: id });
       let formdata = new FormData();
-      formdata.append("presentation", this.state.presentation);
-      formdata.append("equivalence", this.state.equivalence);
-      formdata.append("unit_id", this.state.unit);
-      formdata.append("step", this.state.steps);
-      formdata.append("step_unit_id", this.state.unit);
-      formdata.append("negligible", this.state.negligible);
-      formdata.append("expiration", this.state.expiration);
       const Options = {
         method: "POST",
         body: formdata,
@@ -118,14 +127,13 @@ export default class Recipes extends React.Component {
           Authorization: bearer
         }
       };
-      const respuesta = await fetch(
-        `http://3.219.6.57:5000/admin/product/${id}/subproduct`,
-        Options
-      );
-      const back = await respuesta.json();
-      console.log(back);
+      this.state.tag.map(async tags => {
+        formdata.append("tag_id", tags);
+        await fetch(`http://3.219.6.57:5000/admin/recipe/${id}/tag`, Options);
+      });
       this.setState({ loading: false });
       swal("Hecho!", "El producto se a guardado con exito!", "success");
+      this.props.history.push(`/Index/Recipes/${id}/Ingredients`);
     } catch (err) {
       this.setState({
         loading: false
@@ -137,7 +145,7 @@ export default class Recipes extends React.Component {
     }
   };
   render() {
-    const { loading } = this.state;
+    const { loading, input } = this.state;
     if (this.state.error) {
       return <p className="text-center">error...</p>;
     }
@@ -154,6 +162,21 @@ export default class Recipes extends React.Component {
               name="name"
               onChange={this.changeHandler}
             />
+          </div>
+          <div className="form-group">
+            <label>Image</label>
+            <div className="custom-file">
+              <input
+                type="file"
+                name="file"
+                className="custom-file-input"
+                id="file"
+                onChange={this.fileSelectedHandler}
+              />
+              <label className="custom-file-label" htmlFor="file">
+                Choose file
+              </label>
+            </div>
           </div>
           <div className="form-group">
             <label>Difficulty</label>
@@ -191,24 +214,26 @@ export default class Recipes extends React.Component {
             />
           </div>
           <div className="row">
-            <label className="col-12">Unit</label>
+            <label className="col-12">Tags</label>
             {this.state.tags.map(tag => (
               <div key={tag.id} className="form-check form-check-inline col">
                 <input
                   type="checkbox"
                   className="form-check-input"
-                  id="unit"
-                  name="unit"
+                  id="tag"
+                  name="tag"
                   value={tag.id}
-                  onChange={this.changeHandler}
+                  onChange={this.pushHandler}
                 />
                 <label>{tag.name}</label>
               </div>
             ))}
           </div>
-
-          <button className="btn btn-outline-success" disabled={loading}>
-            {loading && <i className="fa fa-refresh fa-spin"></i>}Guardar
+          <button
+            className="btn btn-outline-success float-right"
+            disabled={loading}
+          >
+            {loading && <i className="fa fa-refresh fa-spin"></i>}Siguiente
           </button>
         </form>
       </div>

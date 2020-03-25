@@ -17,7 +17,7 @@ export default class Navbar extends React.Component {
               <img src={Logo} className="img-fluid" alt="" />
             </Link>
           </div>
-          <nav className="main-nav float-right d-none d-lg-block">
+          <nav className="main-nav  float-right d-none d-block">
             <ul>
               {localStorage.getItem("token") === null ? (
                 <li className="active">

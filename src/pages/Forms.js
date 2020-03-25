@@ -6,6 +6,8 @@ import PrivateRoute from "../auth";
 import NavColumn from "../componentes/NavColumn";
 import Recipes from "../componentes/Recipes";
 import Products from "../componentes/Products";
+import Ingredient from "../componentes/Ingredient";
+import Procedure from "../componentes/Procedure";
 export default class Forms extends React.Component {
   render() {
     return (
@@ -18,6 +20,16 @@ export default class Forms extends React.Component {
             <Switch>
               <PrivateRoute exact path="/Index/Poducts" component={Products} />
               <PrivateRoute exact path="/Index/Recipes" component={Recipes} />
+              <PrivateRoute
+                exact
+                path="/Index/Recipes/:id/Ingredients"
+                component={Ingredient}
+              />
+              <PrivateRoute
+                exact
+                path="/Index/Recipes/:id/Procedure"
+                component={Procedure}
+              />
             </Switch>
           </div>
         </div>

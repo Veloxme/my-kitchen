@@ -259,7 +259,10 @@ export default class Products extends React.Component {
               onChange={this.changeHandler}
             />
           </div>
-          <button className="btn btn-outline-success" disabled={loading}>
+          <button
+            className="btn btn-outline-success float-right"
+            disabled={loading}
+          >
             {loading && <i className="fa fa-refresh fa-spin"></i>}Guardar
           </button>
         </form>
