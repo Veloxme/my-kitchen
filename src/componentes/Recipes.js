@@ -64,6 +64,8 @@ export default class Recipes extends React.Component {
         loading: false,
         tags
       });
+      let combo = document.getElementById("difficulty").value;
+      this.setState({ difficulty: combo });
     } catch (error) {
       this.setState({
         loading: false,
@@ -73,8 +75,6 @@ export default class Recipes extends React.Component {
         icon: "error"
       });
     }
-    let combo = document.getElementById("difficulty").value;
-    this.setState({ difficulty: combo });
   };
   fileSelectedHandler = e => {
     this.setState({ image: e.target.files[0] });

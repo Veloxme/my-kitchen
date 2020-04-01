@@ -17,13 +17,18 @@ export default class Products extends React.Component {
     unit: "",
     steps: "",
     negligible: "",
-    image: ""
+    image: "",
+    identifi: "",
+    producto: "",
+    detalles: ""
   };
   componentDidMount() {
     this.fetchCaregories();
   }
 
   fetchCaregories = async () => {
+    const id = this.props.match.params.id;
+    this.setState({ identifi: id });
     this.setState({ loading: true, error: null });
     const bearer =
       "Bearer " +
@@ -35,6 +40,26 @@ export default class Products extends React.Component {
         Authorization: bearer
       }
     };
+    try {
+      const response = await fetch(
+        `http://3.219.6.57:5000/system/products/${id}`,
+        requestOptions
+      );
+      const producto = await response.json();
+      this.setState({
+        loading: false,
+        producto: producto.content,
+        detalles: producto.content.subproducts[0]
+      });
+    } catch (error) {
+      this.setState({
+        loading: false,
+        error: error
+      });
+      swal({
+        icon: "error"
+      });
+    }
     try {
       const response = await fetch(
         "http://3.219.6.57:5000/system/product-categories",
@@ -62,12 +87,29 @@ export default class Products extends React.Component {
       );
       const unit = await response.json();
       const units = unit.content;
+
       this.setState({
         loading: false,
         units
       });
-      let combo = document.getElementById("category").value;
-      this.setState({ category: combo });
+      for (var i = 0; i < units.length; i++) {
+        if (units[i].id === this.state.detalles.stepUnitId) {
+          document.getElementById(units[i].name).checked = "checked";
+        }
+      }
+      document.getElementById(this.state.producto.productcategoryId).selected =
+        "selected";
+      this.setState({
+        name: this.state.producto.name,
+        image: this.state.producto.image,
+        category: this.state.producto.productcategoryId,
+        presentation: this.state.detalles.presentation,
+        equivalence: this.state.detalles.equivalence,
+        expiration: this.state.detalles.expiration,
+        steps: this.state.detalles.step,
+        negligible: this.state.detalles.negligible,
+        unit: this.state.detalles.stepUnitId
+      });
     } catch (error) {
       this.setState({
         loading: false,
@@ -80,6 +122,7 @@ export default class Products extends React.Component {
   };
   changeHandler = e => {
     this.setState({ [e.target.name]: e.target.value });
+    console.log(e.target.value);
   };
   fileSelectedHandler = e => {
     this.setState({ image: e.target.files[0] });
@@ -93,7 +136,7 @@ export default class Products extends React.Component {
     fd.append("image", this.state.image);
     const bearer = "Bearer " + localStorage.getItem("token");
     const requestOptions = {
-      method: "POST",
+      method: "PUT",
       body: fd,
       withCredentials: true,
       headers: {
@@ -101,12 +144,10 @@ export default class Products extends React.Component {
       }
     };
     try {
-      const response = await fetch(
-        "http://3.219.6.57:5000/admin/product",
+      await fetch(
+        `http://3.219.6.57:5000/admin/product/${this.state.identifi}`,
         requestOptions
       );
-      const json = await response.json();
-      let id = json.content.id;
       let formdata = new FormData();
       formdata.append("presentation", this.state.presentation);
       formdata.append("equivalence", this.state.equivalence);
@@ -116,7 +157,7 @@ export default class Products extends React.Component {
       formdata.append("negligible", this.state.negligible);
       formdata.append("expiration", this.state.expiration);
       const Options = {
-        method: "POST",
+        method: "PUT",
         body: formdata,
         withCredentials: true,
         headers: {
@@ -124,13 +165,13 @@ export default class Products extends React.Component {
         }
       };
       const respuesta = await fetch(
-        `http://3.219.6.57:5000/admin/product/${id}/subproduct`,
+        `http://3.219.6.57:5000/admin/product/${this.state.identifi}/subproduct/${this.state.detalles.id}`,
         Options
       );
       const back = await respuesta.json();
       console.log(back);
       this.setState({ loading: false });
-      swal("Hecho!", "El producto se a guardado con exito!", "success");
+      swal("Hecho!", "El producto se a modificado con exito!", "success");
       this.props.history.push(`/Index/ListaProducts`);
     } catch (err) {
       this.setState({
@@ -160,6 +201,7 @@ export default class Products extends React.Component {
                 id="name"
                 name="name"
                 onChange={this.changeHandler}
+                value={this.state.name}
               />
             </div>
             <div className="form-group col">
@@ -178,7 +220,6 @@ export default class Products extends React.Component {
               </div>
             </div>
           </div>
-
           <div className="form-group">
             <label>Category</label>
             <select
@@ -188,7 +229,7 @@ export default class Products extends React.Component {
               onChange={this.changeHandler}
             >
               {this.state.categorys.map(cat => (
-                <option key={cat.id} value={cat.id}>
+                <option key={cat.id} id={cat.id} value={cat.id}>
                   {cat.name}
                 </option>
               ))}
@@ -202,6 +243,7 @@ export default class Products extends React.Component {
               id="presentation"
               name="presentation"
               onChange={this.changeHandler}
+              value={this.state.presentation}
             />
           </div>
           <div className="row">
@@ -213,6 +255,7 @@ export default class Products extends React.Component {
                 id="equivalence"
                 name="equivalence"
                 onChange={this.changeHandler}
+                value={this.state.equivalence}
               />
             </div>
             <div className="form-group col">
@@ -223,6 +266,7 @@ export default class Products extends React.Component {
                 id="expiration"
                 name="expiration"
                 onChange={this.changeHandler}
+                value={this.state.expiration}
               />
             </div>
           </div>
@@ -236,7 +280,7 @@ export default class Products extends React.Component {
                 <input
                   type="radio"
                   className="form-check-input"
-                  id="unit"
+                  id={unit.name}
                   name="unit"
                   value={unit.id}
                   onChange={this.changeHandler}
@@ -254,6 +298,7 @@ export default class Products extends React.Component {
                 id="steps"
                 name="steps"
                 onChange={this.changeHandler}
+                value={this.state.steps}
               />
             </div>
             <div className="form-group col">
@@ -264,10 +309,10 @@ export default class Products extends React.Component {
                 id="negligible"
                 name="negligible"
                 onChange={this.changeHandler}
+                value={this.state.negligible}
               />
             </div>
           </div>
-
           <button
             className="btn btn-outline-success float-right"
             disabled={loading}

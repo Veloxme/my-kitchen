@@ -41,6 +41,8 @@ export default class Ingredient extends React.Component {
         loading: false,
         ingredients
       });
+      let combo = document.getElementById("ingredient").value;
+      this.setState({ ingredient: combo });
     } catch (error) {
       this.setState({
         loading: false,
@@ -50,8 +52,6 @@ export default class Ingredient extends React.Component {
         icon: "error"
       });
     }
-    let combo = document.getElementById("ingredient").value;
-    this.setState({ ingredient: combo });
   };
   changeHandler = e => {
     this.setState({ [e.target.name]: e.target.value });

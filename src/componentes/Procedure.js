@@ -43,6 +43,9 @@ export default class Procedure extends React.Component {
         ingredients: x,
         step: 1
       });
+      let combo = document.getElementById("ingredient").value;
+      this.setState({ ingredient: combo });
+      document.getElementById("step").value = this.state.step;
     } catch (error) {
       this.setState({
         loading: false,
@@ -52,9 +55,6 @@ export default class Procedure extends React.Component {
         icon: "error"
       });
     }
-    let combo = document.getElementById("ingredient").value;
-    this.setState({ ingredient: combo });
-    document.getElementById("step").value = this.state.step;
   };
   changeHandler = e => {
     this.setState({ [e.target.name]: e.target.value });
@@ -111,7 +111,7 @@ export default class Procedure extends React.Component {
     }
   };
   procedure = e => {
-    this.props.history.push(`/Index/Recipes/${this.state.identifi}/Procedure`);
+    this.props.history.push(`/Index/MenuRecipes`);
   };
   render() {
     const { loading, input } = this.state;
