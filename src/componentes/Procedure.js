@@ -11,7 +11,7 @@ export default class Procedure extends React.Component {
     description: "",
     ingredients: [],
     ingredient: "",
-    identifi: ""
+    identifi: "",
   };
   componentDidMount() {
     this.fetchCaregories();
@@ -28,8 +28,8 @@ export default class Procedure extends React.Component {
       method: "GET",
       withCredentials: true,
       headers: {
-        Authorization: bearer
-      }
+        Authorization: bearer,
+      },
     };
     try {
       const response = await fetch(
@@ -41,7 +41,7 @@ export default class Procedure extends React.Component {
       this.setState({
         loading: false,
         ingredients: x,
-        step: 1
+        step: 1,
       });
       let combo = document.getElementById("ingredient").value;
       this.setState({ ingredient: combo });
@@ -49,26 +49,26 @@ export default class Procedure extends React.Component {
     } catch (error) {
       this.setState({
         loading: false,
-        error: error
+        error: error,
       });
       swal({
-        icon: "error"
+        icon: "error",
       });
     }
   };
-  changeHandler = e => {
+  changeHandler = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
-  prueba = e => {
+  prueba = (e) => {
     e.preventDefault();
     let y = this.state.step;
     y += 1;
     console.log(y);
     this.setState({
-      step: y
+      step: y,
     });
   };
-  handleSubmit = async e => {
+  handleSubmit = async (e) => {
     e.preventDefault();
     this.setState({ loading: true });
     let fd = new FormData();
@@ -81,8 +81,48 @@ export default class Procedure extends React.Component {
       body: fd,
       withCredentials: true,
       headers: {
-        Authorization: bearer
-      }
+        Authorization: bearer,
+      },
+    };
+    try {
+      await fetch(
+        `http://3.219.6.57:5000/admin/recipe/${this.state.identifi}/procedure`,
+        requestOptions
+      );
+
+      this.setState({ loading: false });
+      swal("Hecho!", "El paso se a guardado con exito!", "success");
+      document.getElementById("description").value = "";
+      let y = this.state.step;
+      y += 1;
+      this.setState({
+        step: y,
+      });
+      document.getElementById("step").value = this.state.step;
+    } catch (err) {
+      this.setState({
+        loading: false,
+      });
+      swal({
+        icon: "error",
+      });
+      console.log(err);
+    }
+  };
+  procedure = async (e) => {
+    this.setState({ loading: true });
+    let fd = new FormData();
+    fd.append("step_number", this.state.step);
+    fd.append("description", this.state.description);
+    fd.append("ingredient_id", this.state.ingredient);
+    const bearer = "Bearer " + localStorage.getItem("token");
+    const requestOptions = {
+      method: "POST",
+      body: fd,
+      withCredentials: true,
+      headers: {
+        Authorization: bearer,
+      },
     };
 
     try {
@@ -92,26 +132,17 @@ export default class Procedure extends React.Component {
       );
 
       this.setState({ loading: false });
-      swal("Hecho!", "El producto se a guardado con exito!", "success");
-      document.getElementById("description").value = "";
-      let y = this.state.step;
-      y += 1;
-      this.setState({
-        step: y
-      });
-      document.getElementById("step").value = this.state.step;
+      swal("Hecho!", "El paso se a guardado con exito!", "success");
+      this.props.history.push(`/Index/MenuRecipes`);
     } catch (err) {
       this.setState({
-        loading: false
+        loading: false,
       });
       swal({
-        icon: "error"
+        icon: "error",
       });
       console.log(err);
     }
-  };
-  procedure = e => {
-    this.props.history.push(`/Index/MenuRecipes`);
   };
   render() {
     const { loading, input } = this.state;
@@ -141,7 +172,7 @@ export default class Procedure extends React.Component {
               name="ingredient"
               onChange={this.changeHandler}
             >
-              {this.state.ingredients.map(ing => (
+              {this.state.ingredients.map((ing) => (
                 <option key={ing.id} value={ing.id}>
                   {ing.product.name}
                 </option>

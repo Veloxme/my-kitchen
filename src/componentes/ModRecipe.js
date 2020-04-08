@@ -3,25 +3,26 @@ import "../includes/bootstrap";
 import "../font-awesome/css/font-awesome.min.css";
 import swal from "sweetalert";
 
-export default class Recipes extends React.Component {
+export default class ModRecipe extends React.Component {
   state = {
     loading: false,
     error: null,
     difficulties: [],
-    tags: [],
+    producto: [],
     name: "",
     difficulty: "",
     time: "",
     calories: "",
-    tag: [],
-    image: ""
+    image: "",
+    id: "",
   };
   componentDidMount() {
     this.fetchCaregories();
   }
 
   fetchCaregories = async () => {
-    this.setState({ loading: true, error: null });
+    const id = this.props.match.params.id;
+    this.setState({ loading: true, error: null, id });
     const bearer =
       "Bearer " +
       "S<yus%;|ZO'1k/ISa^H+6_,!:&$0Z+kM9)B?;f`=]=p%q!)uJ^x_!F!7!LL&F|B";
@@ -29,62 +30,64 @@ export default class Recipes extends React.Component {
       method: "GET",
       withCredentials: true,
       headers: {
-        Authorization: bearer
-      }
+        Authorization: bearer,
+      },
     };
+    try {
+      const response = await fetch(
+        `http://3.219.6.57:5000/system/recipes/${id}`,
+        requestOptions
+      );
+      const producto = await response.json();
+      this.setState({
+        loading: false,
+        producto: producto.content,
+      });
+    } catch (error) {
+      this.setState({
+        loading: false,
+        error: error,
+      });
+      swal({
+        icon: "error",
+      });
+    }
     try {
       const response = await fetch(
         "http://3.219.6.57:5000/system/difficulties",
         requestOptions
       );
       const difficul = await response.json();
-      const difficulties = difficul.content;
       this.setState({
         loading: false,
-        difficulties
+        difficulties: difficul.content,
       });
+      document.getElementById(this.state.producto.difficultyId).selected =
+        "selected";
     } catch (error) {
       this.setState({
         loading: false,
-        error: error
+        error: error,
       });
       swal({
-        icon: "error"
+        icon: "error",
       });
     }
-    try {
-      const response = await fetch(
-        "http://3.219.6.57:5000/system/tags",
-        requestOptions
-      );
-      const tag = await response.json();
-      const tags = tag.content;
-      this.setState({
-        loading: false,
-        tags
-      });
-      let combo = document.getElementById("difficulty").value;
-      this.setState({ difficulty: combo });
-    } catch (error) {
-      this.setState({
-        loading: false,
-        error: error
-      });
-      swal({
-        icon: "error"
-      });
-    }
+    this.setState({
+      name: this.state.producto.name,
+      difficulty: this.state.producto.difficultyId,
+      time: this.state.producto.time,
+      image: this.state.producto.image,
+      calories: this.state.producto.calories,
+    });
   };
-  fileSelectedHandler = e => {
+  fileSelectedHandler = (e) => {
     this.setState({ image: e.target.files[0] });
   };
-  changeHandler = e => {
+  changeHandler = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
-  pushHandler = e => {
-    this.state.tag.push(e.target.value);
-  };
-  handleSubmit = async e => {
+  handleSubmit = async (e) => {
     e.preventDefault();
     this.setState({ loading: true });
     let fd = new FormData();
@@ -95,43 +98,28 @@ export default class Recipes extends React.Component {
     fd.append("calories", this.state.calories);
     const bearer = "Bearer " + localStorage.getItem("token");
     const requestOptions = {
-      method: "POST",
+      method: "PUT",
       body: fd,
       withCredentials: true,
       headers: {
-        Authorization: bearer
-      }
+        Authorization: bearer,
+      },
     };
     try {
       const response = await fetch(
-        "http://3.219.6.57:5000/admin/recipe",
+        `http://3.219.6.57:5000/admin/recipe/${this.state.id}`,
         requestOptions
       );
       const json = await response.json();
-      let id = json.content.id;
-      this.setState({ identidicador: id });
-      let formdata = new FormData();
-      const Options = {
-        method: "POST",
-        body: formdata,
-        withCredentials: true,
-        headers: {
-          Authorization: bearer
-        }
-      };
-      this.state.tag.map(async tags => {
-        formdata.append("tag_id", tags);
-        await fetch(`http://3.219.6.57:5000/admin/recipe/${id}/tag`, Options);
-      });
       this.setState({ loading: false });
-      swal("Hecho!", "El producto se a guardado con exito!", "success");
-      this.props.history.push(`/Index/Recipes/${id}/Ingredients`);
+      swal("Hecho!", `${json.details}`, "success");
+      this.props.history.push(`/Index/ListaRecipes`);
     } catch (err) {
       this.setState({
-        loading: false
+        loading: false,
       });
       swal({
-        icon: "error"
+        icon: "error",
       });
       console.log(err);
     }
@@ -143,7 +131,7 @@ export default class Recipes extends React.Component {
     }
     return (
       <div className="card mx-auto mt-4 mb-1 col-md-6">
-        <h1 className=" card-header ">Recipes</h1>
+        <h1 className=" card-header ">Recipe "{this.state.producto.name}"</h1>
         <form className=" card-body " onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label>Name</label>
@@ -152,6 +140,7 @@ export default class Recipes extends React.Component {
               className="form-control"
               id="name"
               name="name"
+              value={this.state.name}
               onChange={this.changeHandler}
             />
           </div>
@@ -178,8 +167,8 @@ export default class Recipes extends React.Component {
               name="difficulty"
               onChange={this.changeHandler}
             >
-              {this.state.difficulties.map(dif => (
-                <option key={dif.id} value={dif.id}>
+              {this.state.difficulties.map((dif) => (
+                <option key={dif.id} id={dif.id} value={dif.id}>
                   {dif.name}
                 </option>
               ))}
@@ -192,6 +181,7 @@ export default class Recipes extends React.Component {
               className="form-control"
               id="time"
               name="time"
+              value={this.state.time}
               onChange={this.changeHandler}
             />
           </div>
@@ -202,30 +192,15 @@ export default class Recipes extends React.Component {
               className="form-control"
               id="calories"
               name="calories"
+              value={this.state.calories}
               onChange={this.changeHandler}
             />
-          </div>
-          <div className="row">
-            <label className="col-12">Tags</label>
-            {this.state.tags.map(tag => (
-              <div key={tag.id} className="form-check form-check-inline col">
-                <input
-                  type="checkbox"
-                  className="form-check-input"
-                  id="tag"
-                  name="tag"
-                  value={tag.id}
-                  onChange={this.pushHandler}
-                />
-                <label>{tag.name}</label>
-              </div>
-            ))}
           </div>
           <button
             className="btn btn-outline-success float-right"
             disabled={loading}
           >
-            {loading && <i className="fa fa-refresh fa-spin"></i>}Siguiente
+            {loading && <i className="fa fa-refresh fa-spin"></i>}Guardar
           </button>
         </form>
       </div>

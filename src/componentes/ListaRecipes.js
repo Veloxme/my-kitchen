@@ -48,7 +48,9 @@ export default class ListaRecipes extends React.Component {
       });
     }
   };
-  put = e => {};
+  put = async e => {
+    this.props.history.push(`/Index/MenuMod/${e}`);
+  };
   delete = async e => {
     this.setState({ loading: true });
     const bearer = "Bearer " + localStorage.getItem("token");
@@ -89,7 +91,7 @@ export default class ListaRecipes extends React.Component {
                 Delete
               </button>
               <button
-                onClick={this.put}
+                onClick={() => this.put(rec.id)}
                 className="badge badge-warning badge-pill float-right mr-3"
               >
                 Modify

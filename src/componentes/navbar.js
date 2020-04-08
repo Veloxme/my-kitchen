@@ -13,9 +13,15 @@ export default class Navbar extends React.Component {
       <header id="header">
         <div className="container">
           <div className="logo float-left">
-            <Link to="/" className="scrollto">
-              <img src={Logo} className="img-fluid" alt="" />
-            </Link>
+            {localStorage.getItem("token") === null ? (
+              <Link to="/" className="scrollto">
+                <img src={Logo} className="img-fluid" alt="" />
+              </Link>
+            ) : (
+              <Link to="/Index" className="scrollto">
+                <img src={Logo} className="img-fluid" alt="" />
+              </Link>
+            )}
           </div>
           <nav className="main-nav  float-right d-none d-block">
             <ul>

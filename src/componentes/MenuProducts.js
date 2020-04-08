@@ -23,6 +23,27 @@ export default class MenuProducts extends React.Component {
             <h1 className="text-center">Agregar</h1>
           </Link>
         </div>
+        <div className="row mt-3">
+          <Link
+            to="/Index/Category"
+            className=" p-5 m-2 bg-orangeKitchen rounded col"
+          >
+            <h1 className="text-center">New category</h1>
+          </Link>
+
+          <Link
+            to="/Index/Units"
+            className=" p-5 m-2 bg-orangeKitchen rounded col "
+          >
+            <h1 className="text-center">New unit</h1>
+          </Link>
+          <Link
+            to="/Index/Tags"
+            className=" p-5 m-2 bg-orangeKitchen rounded col "
+          >
+            <h1 className="text-center">New tag</h1>
+          </Link>
+        </div>
       </div>
     );
   }
