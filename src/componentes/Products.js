@@ -17,7 +17,8 @@ export default class Products extends React.Component {
     unit: "",
     steps: "",
     negligible: "",
-    image: ""
+    image: "",
+    stepsunit: "",
   };
   componentDidMount() {
     this.fetchCaregories();
@@ -32,8 +33,8 @@ export default class Products extends React.Component {
       method: "GET",
       withCredentials: true,
       headers: {
-        Authorization: bearer
-      }
+        Authorization: bearer,
+      },
     };
     try {
       const response = await fetch(
@@ -44,15 +45,15 @@ export default class Products extends React.Component {
       const categorys = catego.content;
       this.setState({
         loading: false,
-        categorys
+        categorys,
       });
     } catch (error) {
       this.setState({
         loading: false,
-        error: error
+        error: error,
       });
       swal({
-        icon: "error"
+        icon: "error",
       });
     }
     try {
@@ -64,27 +65,27 @@ export default class Products extends React.Component {
       const units = unit.content;
       this.setState({
         loading: false,
-        units
+        units,
       });
       let combo = document.getElementById("category").value;
       this.setState({ category: combo });
     } catch (error) {
       this.setState({
         loading: false,
-        error: error
+        error: error,
       });
       swal({
-        icon: "error"
+        icon: "error",
       });
     }
   };
-  changeHandler = e => {
+  changeHandler = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
-  fileSelectedHandler = e => {
+  fileSelectedHandler = (e) => {
     this.setState({ image: e.target.files[0] });
   };
-  handleSubmit = async e => {
+  handleSubmit = async (e) => {
     e.preventDefault();
     this.setState({ loading: true });
     let fd = new FormData();
@@ -97,8 +98,8 @@ export default class Products extends React.Component {
       body: fd,
       withCredentials: true,
       headers: {
-        Authorization: bearer
-      }
+        Authorization: bearer,
+      },
     };
     try {
       const response = await fetch(
@@ -112,7 +113,7 @@ export default class Products extends React.Component {
       formdata.append("equivalence", this.state.equivalence);
       formdata.append("unit_id", this.state.unit);
       formdata.append("step", this.state.steps);
-      formdata.append("step_unit_id", this.state.unit);
+      formdata.append("step_unit_id", this.state.stepsunit);
       formdata.append("negligible", this.state.negligible);
       formdata.append("expiration", this.state.expiration);
       const Options = {
@@ -120,8 +121,8 @@ export default class Products extends React.Component {
         body: formdata,
         withCredentials: true,
         headers: {
-          Authorization: bearer
-        }
+          Authorization: bearer,
+        },
       };
       const respuesta = await fetch(
         `http://3.219.6.57:5000/admin/product/${id}/subproduct`,
@@ -134,10 +135,10 @@ export default class Products extends React.Component {
       this.props.history.push(`/Index/ListaProducts`);
     } catch (err) {
       this.setState({
-        loading: false
+        loading: false,
       });
       swal({
-        icon: "error"
+        icon: "error",
       });
       console.log(err);
     }
@@ -187,7 +188,7 @@ export default class Products extends React.Component {
               name="category"
               onChange={this.changeHandler}
             >
-              {this.state.categorys.map(cat => (
+              {this.state.categorys.map((cat) => (
                 <option key={cat.id} value={cat.id}>
                   {cat.name}
                 </option>
@@ -228,7 +229,7 @@ export default class Products extends React.Component {
           </div>
           <div className="row">
             <label className="col-12">Unit</label>
-            {this.state.units.map(unit => (
+            {this.state.units.map((unit) => (
               <div
                 key={unit.id}
                 className="form-check form-check-inline col pl-3"
@@ -245,27 +246,46 @@ export default class Products extends React.Component {
               </div>
             ))}
           </div>
+
+          <div className="form-group">
+            <label>Steps</label>
+            <input
+              type="number"
+              className="form-control"
+              id="steps"
+              name="steps"
+              onChange={this.changeHandler}
+            />
+          </div>
           <div className="row">
-            <div className="form-group col">
-              <label>Steps</label>
-              <input
-                type="number"
-                className="form-control"
-                id="steps"
-                name="steps"
-                onChange={this.changeHandler}
-              />
-            </div>
-            <div className="form-group col">
-              <label>Negligible</label>
-              <input
-                type="number"
-                className="form-control"
-                id="negligible"
-                name="negligible"
-                onChange={this.changeHandler}
-              />
-            </div>
+            <label className="col-12">Steps unit</label>
+            {this.state.units.map((unit) => (
+              <div
+                key={unit.id}
+                className="form-check form-check-inline col pl-3"
+              >
+                <input
+                  type="radio"
+                  className="form-check-input"
+                  id="stepsunit"
+                  name="stepsunit"
+                  value={unit.id}
+                  onChange={this.changeHandler}
+                />
+                <label>{unit.name}</label>
+              </div>
+            ))}
+          </div>
+
+          <div className="form-group">
+            <label>Negligible</label>
+            <input
+              type="number"
+              className="form-control"
+              id="negligible"
+              name="negligible"
+              onChange={this.changeHandler}
+            />
           </div>
 
           <button
