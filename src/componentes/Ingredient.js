@@ -10,7 +10,8 @@ export default class Ingredient extends React.Component {
     ingredients: [],
     ingredient: "",
     quantity: "",
-    identifi: ""
+    identifi: "",
+    unit_id: "",
   };
   componentDidMount() {
     this.fetchCaregories();
@@ -27,53 +28,62 @@ export default class Ingredient extends React.Component {
       method: "GET",
       withCredentials: true,
       headers: {
-        Authorization: bearer
-      }
+        Authorization: bearer,
+      },
     };
     try {
       const response = await fetch(
-        "http://3.219.6.57:5000/system/products",
+        "http://3.219.6.57:5000/system/products/details",
         requestOptions
       );
       const ingre = await response.json();
       const ingredients = ingre.content;
+      console.log(ingredients);
       this.setState({
         loading: false,
-        ingredients
+        ingredients,
       });
       let combo = document.getElementById("ingredient").value;
       this.setState({ ingredient: combo });
     } catch (error) {
       this.setState({
         loading: false,
-        error: error
+        error: error,
       });
       swal({
-        icon: "error"
+        icon: "error",
       });
     }
   };
-  changeHandler = e => {
+  changeHandler = async (e) => {
     this.setState({ [e.target.name]: e.target.value });
+    for (var i = 0; i < this.state.ingredients.length; i++) {
+      if (this.state.ingredients[i].id === parseInt(e.target.value, 10)) {
+        this.setState({
+          unit_id: this.state.ingredients[i].subproducts[0].unitId,
+        });
+      }
+    }
   };
-  prueba = e => {
+  prueba = (e) => {
     e.preventDefault();
     this.props.history.push(`/Index/Recipes/${this.state.identidicador}`);
   };
-  handleSubmit = async e => {
+  handleSubmit = async (e) => {
     e.preventDefault();
     this.setState({ loading: true });
     let fd = new FormData();
     fd.append("product_id", this.state.ingredient);
     fd.append("quantity", this.state.quantity);
+    fd.append("unit_id", this.state.unit_id);
     const bearer = "Bearer " + localStorage.getItem("token");
     const requestOptions = {
       method: "POST",
       body: fd,
       withCredentials: true,
       headers: {
-        Authorization: bearer
-      }
+        Authorization: bearer,
+      },
     };
 
     try {
@@ -88,15 +98,15 @@ export default class Ingredient extends React.Component {
       document.getElementById("quantity").value = "";
     } catch (err) {
       this.setState({
-        loading: false
+        loading: false,
       });
       swal({
-        icon: "error"
+        icon: "error",
       });
       console.log(err);
     }
   };
-  procedure = e => {
+  procedure = (e) => {
     this.props.history.push(`/Index/Recipes/${this.state.identifi}/Procedure`);
   };
   render() {
@@ -116,7 +126,7 @@ export default class Ingredient extends React.Component {
               name="ingredient"
               onChange={this.changeHandler}
             >
-              {this.state.ingredients.map(ing => (
+              {this.state.ingredients.map((ing) => (
                 <option key={ing.id} value={ing.id}>
                   {ing.name}
                 </option>

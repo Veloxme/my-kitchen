@@ -14,7 +14,8 @@ export default class Recipes extends React.Component {
     time: "",
     calories: "",
     tag: [],
-    image: ""
+    image: "",
+    identidicador: 15,
   };
   componentDidMount() {
     this.fetchCaregories();
@@ -29,8 +30,8 @@ export default class Recipes extends React.Component {
       method: "GET",
       withCredentials: true,
       headers: {
-        Authorization: bearer
-      }
+        Authorization: bearer,
+      },
     };
     try {
       const response = await fetch(
@@ -41,15 +42,15 @@ export default class Recipes extends React.Component {
       const difficulties = difficul.content;
       this.setState({
         loading: false,
-        difficulties
+        difficulties,
       });
     } catch (error) {
       this.setState({
         loading: false,
-        error: error
+        error: error,
       });
       swal({
-        icon: "error"
+        icon: "error",
       });
     }
     try {
@@ -61,30 +62,30 @@ export default class Recipes extends React.Component {
       const tags = tag.content;
       this.setState({
         loading: false,
-        tags
+        tags,
       });
       let combo = document.getElementById("difficulty").value;
       this.setState({ difficulty: combo });
     } catch (error) {
       this.setState({
         loading: false,
-        error: error
+        error: error,
       });
       swal({
-        icon: "error"
+        icon: "error",
       });
     }
   };
-  fileSelectedHandler = e => {
+  fileSelectedHandler = (e) => {
     this.setState({ image: e.target.files[0] });
   };
-  changeHandler = e => {
+  changeHandler = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
-  pushHandler = e => {
+  pushHandler = (e) => {
     this.state.tag.push(e.target.value);
   };
-  handleSubmit = async e => {
+  handleSubmit = async (e) => {
     e.preventDefault();
     this.setState({ loading: true });
     let fd = new FormData();
@@ -99,8 +100,8 @@ export default class Recipes extends React.Component {
       body: fd,
       withCredentials: true,
       headers: {
-        Authorization: bearer
-      }
+        Authorization: bearer,
+      },
     };
     try {
       const response = await fetch(
@@ -116,10 +117,10 @@ export default class Recipes extends React.Component {
         body: formdata,
         withCredentials: true,
         headers: {
-          Authorization: bearer
-        }
+          Authorization: bearer,
+        },
       };
-      this.state.tag.map(async tags => {
+      this.state.tag.map(async (tags) => {
         formdata.append("tag_id", tags);
         await fetch(`http://3.219.6.57:5000/admin/recipe/${id}/tag`, Options);
       });
@@ -128,13 +129,19 @@ export default class Recipes extends React.Component {
       this.props.history.push(`/Index/Recipes/${id}/Ingredients`);
     } catch (err) {
       this.setState({
-        loading: false
+        loading: false,
       });
       swal({
-        icon: "error"
+        icon: "error",
       });
       console.log(err);
     }
+  };
+  prueba = (e) => {
+    e.preventDefault();
+    this.props.history.push(
+      `/Index/Recipes/${this.state.identidicador}/Ingredients`
+    );
   };
   render() {
     const { loading, input } = this.state;
@@ -178,7 +185,7 @@ export default class Recipes extends React.Component {
               name="difficulty"
               onChange={this.changeHandler}
             >
-              {this.state.difficulties.map(dif => (
+              {this.state.difficulties.map((dif) => (
                 <option key={dif.id} value={dif.id}>
                   {dif.name}
                 </option>
@@ -207,7 +214,7 @@ export default class Recipes extends React.Component {
           </div>
           <div className="row">
             <label className="col-12">Tags</label>
-            {this.state.tags.map(tag => (
+            {this.state.tags.map((tag) => (
               <div key={tag.id} className="form-check form-check-inline col">
                 <input
                   type="checkbox"

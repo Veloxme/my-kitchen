@@ -13,14 +13,14 @@ export default class MenuProducts extends React.Component {
             to="/Index/ListaProducts"
             className=" p-5 m-2 bg-orangeKitchen rounded col"
           >
-            <h1 className="text-center">Lista</h1>
+            <h1 className="text-center">List</h1>
           </Link>
 
           <Link
             to="/Index/Products"
             className=" p-5 m-2 bg-orangeKitchen rounded col "
           >
-            <h1 className="text-center">Agregar</h1>
+            <h1 className="text-center">Add</h1>
           </Link>
         </div>
         <div className="row mt-3">
