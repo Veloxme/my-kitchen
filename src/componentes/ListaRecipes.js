@@ -7,7 +7,7 @@ export default class ListaRecipes extends React.Component {
   state = {
     loading: false,
     error: null,
-    Recipes: []
+    Recipes: [],
   };
   componentDidMount() {
     this.fetchCaregories();
@@ -24,8 +24,8 @@ export default class ListaRecipes extends React.Component {
       method: "GET",
       withCredentials: true,
       headers: {
-        Authorization: bearer
-      }
+        Authorization: bearer,
+      },
     };
     try {
       const response = await fetch(
@@ -33,33 +33,41 @@ export default class ListaRecipes extends React.Component {
         requestOptions
       );
       const reci = await response.json();
-      const recipes = reci.content;
+      const recipes = reci.content.sort((a, b) => {
+        if (a.name > b.name) {
+          return 1;
+        }
+        if (a.name < b.name) {
+          return -1;
+        }
+        return 0;
+      });
       this.setState({
         loading: false,
-        Recipes: recipes
+        Recipes: recipes,
       });
     } catch (error) {
       this.setState({
         loading: false,
-        error: error
+        error: error,
       });
       swal({
-        icon: "error"
+        icon: "error",
       });
     }
   };
-  put = async e => {
+  put = async (e) => {
     this.props.history.push(`/Index/MenuMod/${e}`);
   };
-  delete = async e => {
+  delete = async (e) => {
     this.setState({ loading: true });
     const bearer = "Bearer " + localStorage.getItem("token");
     const requestOptions = {
       method: "DELETE",
       withCredentials: true,
       headers: {
-        Authorization: bearer
-      }
+        Authorization: bearer,
+      },
     };
     try {
       await fetch(`http://3.219.6.57:5000/admin/recipe/${e}`, requestOptions);
@@ -69,10 +77,10 @@ export default class ListaRecipes extends React.Component {
       this.fetchCaregories();
     } catch (err) {
       this.setState({
-        loading: false
+        loading: false,
       });
       swal({
-        icon: "error"
+        icon: "error",
       });
       console.log(err);
     }
@@ -81,7 +89,7 @@ export default class ListaRecipes extends React.Component {
     return (
       <div className="container mt-3">
         <ul className="list-group">
-          {this.state.Recipes.map(rec => (
+          {this.state.Recipes.map((rec) => (
             <li className="list-group-item" key={rec.id}>
               {rec.name}
               <button
