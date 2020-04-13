@@ -214,7 +214,7 @@ export default class ModProcedure extends React.Component {
               className="btn btn-outline-success float-right"
               disabled={loading}
             >
-              {loading && <i className="fa fa-refresh fa-spin"></i>}Guardar
+              {loading && <i className="fa fa-refresh fa-spin"></i>}Save
             </button>
           </form>
         </div>

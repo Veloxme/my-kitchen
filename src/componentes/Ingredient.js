@@ -147,7 +147,7 @@ export default class Ingredient extends React.Component {
             className="btn btn-outline-success float-right"
             disabled={loading}
           >
-            {loading && <i className="fa fa-refresh fa-spin"></i>}Siguiente
+            {loading && <i className="fa fa-refresh fa-spin"></i>}Next
           </button>
         </form>
         <button

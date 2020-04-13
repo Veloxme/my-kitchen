@@ -14,6 +14,7 @@ export default class ModIngredient extends React.Component {
     ingredient: "",
     quantity: "",
     ingredient_id: "",
+    unit_id: "",
   };
   componentDidMount() {
     this.fetchCaregories();
@@ -55,7 +56,7 @@ export default class ModIngredient extends React.Component {
     }
     try {
       const response = await fetch(
-        "http://3.219.6.57:5000/system/products",
+        "http://3.219.6.57:5000/system/products/details",
         requestOptions
       );
       const ingre = await response.json();
@@ -86,6 +87,7 @@ export default class ModIngredient extends React.Component {
     let fd = new FormData();
     fd.append("product_id", this.state.ingredient);
     fd.append("quantity", this.state.quantity);
+    fd.append("unit_id", this.state.unit_id);
     const requestOptions = {
       method: "PUT",
       body: fd,
@@ -148,6 +150,7 @@ export default class ModIngredient extends React.Component {
       quantity: e.quantity,
       ingredient: e.product.id,
       ingredient_id: e.id,
+      unit_id: e.unitId,
     });
   };
   render() {
@@ -212,7 +215,7 @@ export default class ModIngredient extends React.Component {
               className="btn btn-outline-success float-right"
               disabled={loading}
             >
-              {loading && <i className="fa fa-refresh fa-spin"></i>}Guardar
+              {loading && <i className="fa fa-refresh fa-spin"></i>}Save
             </button>
           </form>
         </div>
