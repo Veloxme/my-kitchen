@@ -38,11 +38,19 @@ export default class ListaProducts extends React.Component {
         requestOptions
       );
       const reci = await response.json();
-      const Recipes = reci.content;
+      const Recipes = reci.content.sort((a, b) => {
+        if (a.name > b.name) {
+          return 1;
+        }
+        if (a.name < b.name) {
+          return -1;
+        }
+        return 0;
+      });
       const numero = Recipes.length - 10;
       this.setState({
         loading: false,
-        Recipes: Recipes,
+        Recipes,
         numero,
       });
       let algo = [];
