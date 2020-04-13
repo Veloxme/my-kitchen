@@ -95,12 +95,12 @@ export default class Products extends React.Component {
       });
       for (var i = 0; i < units.length; i++) {
         if (units[i].id === this.state.detalles.stepUnitId) {
-          document.getElementById(units[i].name).checked = "checked";
+          document.getElementById(`step${units[i].id}`).checked = true;
         }
       }
       for (var x = 0; x < units.length; x++) {
         if (units[x].id === this.state.detalles.unitId) {
-          document.getElementById(units[x].name).checked = "checked";
+          document.getElementById(units[x].name).checked = true;
         }
       }
       document.getElementById(this.state.producto.productcategoryId).selected =
@@ -114,7 +114,8 @@ export default class Products extends React.Component {
         expiration: this.state.detalles.expiration,
         steps: this.state.detalles.step,
         negligible: this.state.detalles.negligible,
-        unit: this.state.detalles.stepUnitId,
+        unit: this.state.detalles.unitId,
+        stepsunit: this.state.detalles.stepUnitId,
       });
     } catch (error) {
       this.setState({
@@ -308,7 +309,7 @@ export default class Products extends React.Component {
             />
           </div>
           <div className="row">
-            <label className="col-12">Unit</label>
+            <label className="col-12">step unit</label>
             {this.state.units.map((unit) => (
               <div
                 key={unit.id}
@@ -317,7 +318,7 @@ export default class Products extends React.Component {
                 <input
                   type="radio"
                   className="form-check-input"
-                  id={unit.name}
+                  id={`step${unit.id}`}
                   name="stepsunit"
                   value={unit.id}
                   onChange={this.changeHandler}
