@@ -62,7 +62,15 @@ export default class ModIngredient extends React.Component {
       const ingre = await response.json();
       this.setState({
         loading: false,
-        ingredients: ingre.content,
+        ingredients: ingre.content.sort((a, b) => {
+          if (a.name > b.name) {
+            return 1;
+          }
+          if (a.name < b.name) {
+            return -1;
+          }
+          return 0;
+        }),
       });
       let combo = document.getElementById("ingredient").value;
       this.setState({ ingredient: combo });
