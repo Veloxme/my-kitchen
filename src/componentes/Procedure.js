@@ -38,11 +38,20 @@ export default class Procedure extends React.Component {
       );
       const ingre = await response.json();
       const x = ingre.content.group[0].ingredients;
-      this.setState({
-        loading: false,
-        ingredients: x,
-        step: 1,
-      });
+      if (ingre.content.procedure) {
+        this.setState({
+          loading: false,
+          ingredients: x,
+          step: ingre.content.procedure.length + 1,
+        });
+      } else {
+        this.setState({
+          loading: false,
+          ingredients: x,
+          step: 1,
+        });
+      }
+
       let combo = document.getElementById("ingredient").value;
       this.setState({ ingredient: combo });
       document.getElementById("step").value = this.state.step;

@@ -140,6 +140,9 @@ export default class ModProcedure extends React.Component {
       ingredient: e.ingredientId,
     });
   };
+  procedures = () => {
+    this.props.history.push(`/Index/Recipes/${this.state.id}/Procedure`);
+  };
   render() {
     const { loading } = this.state;
     if (this.state.error) {
@@ -148,6 +151,13 @@ export default class ModProcedure extends React.Component {
     return (
       <div className="m-3 row">
         <div className="col">
+          <button
+            type="button"
+            className="btn btn-secondary btn-lg mb-3"
+            onClick={this.procedures}
+          >
+            New procedure
+          </button>
           <ul className="list-group">
             {this.state.procedure.map((x) => (
               <li

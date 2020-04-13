@@ -161,6 +161,9 @@ export default class ModIngredient extends React.Component {
       unit_id: e.unitId,
     });
   };
+  ingredients = () => {
+    this.props.history.push(`/Index/Recipes/${this.state.id}/Ingredients`);
+  };
   render() {
     const { loading } = this.state;
     if (this.state.error) {
@@ -168,7 +171,14 @@ export default class ModIngredient extends React.Component {
     }
     return (
       <div className="m-3 row">
-        <div className="col">
+        <div className="col ">
+          <button
+            type="button"
+            className="btn btn-secondary btn-lg mb-3"
+            onClick={this.ingredients}
+          >
+            New ingredient
+          </button>
           <ul className="list-group">
             {this.state.group.map((x) => (
               <li
