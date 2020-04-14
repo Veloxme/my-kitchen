@@ -87,60 +87,77 @@ export default class Products extends React.Component {
   };
   handleSubmit = async (e) => {
     e.preventDefault();
-    this.setState({ loading: true });
-    let fd = new FormData();
-    fd.append("name", this.state.name);
-    fd.append("productCategory_id", this.state.category);
-    fd.append("image", this.state.image);
-    const bearer = "Bearer " + localStorage.getItem("token");
-    const requestOptions = {
-      method: "POST",
-      body: fd,
-      withCredentials: true,
-      headers: {
-        Authorization: bearer,
-      },
-    };
-    try {
-      const response = await fetch(
-        "http://3.219.6.57:5000/admin/product",
-        requestOptions
-      );
-      const json = await response.json();
-      let id = json.content.id;
-      let formdata = new FormData();
-      formdata.append("presentation", this.state.presentation);
-      formdata.append("equivalence", this.state.equivalence);
-      formdata.append("unit_id", this.state.unit);
-      formdata.append("step", this.state.steps);
-      formdata.append("step_unit_id", this.state.stepsunit);
-      formdata.append("negligible", this.state.negligible);
-      formdata.append("expiration", this.state.expiration);
-      const Options = {
+    if (
+      this.state.name === "" ||
+      this.state.category === "" ||
+      this.state.image === "" ||
+      this.state.presentation === "" ||
+      this.state.equivalence === "" ||
+      this.state.unit === "" ||
+      this.state.steps === "" ||
+      this.state.stepsunit === "" ||
+      this.state.negligible === "" ||
+      this.state.expiration === ""
+    ) {
+      swal("You need to fill all the fields!", {
+        buttons: false,
+        timer: 3000,
+      });
+    } else {
+      this.setState({ loading: true });
+      let fd = new FormData();
+      fd.append("name", this.state.name);
+      fd.append("productCategory_id", this.state.category);
+      fd.append("image", this.state.image);
+      const bearer = "Bearer " + localStorage.getItem("token");
+      const requestOptions = {
         method: "POST",
-        body: formdata,
+        body: fd,
         withCredentials: true,
         headers: {
           Authorization: bearer,
         },
       };
-      const respuesta = await fetch(
-        `http://3.219.6.57:5000/admin/product/${id}/subproduct`,
-        Options
-      );
-      const back = await respuesta.json();
-      console.log(back);
-      this.setState({ loading: false });
-      swal("Hecho!", "El producto se a guardado con exito!", "success");
-      this.props.history.push(`/Index/ListaProducts`);
-    } catch (err) {
-      this.setState({
-        loading: false,
-      });
-      swal({
-        icon: "error",
-      });
-      console.log(err);
+      try {
+        const response = await fetch(
+          "http://3.219.6.57:5000/admin/product",
+          requestOptions
+        );
+        const json = await response.json();
+        let id = json.content.id;
+        let formdata = new FormData();
+        formdata.append("presentation", this.state.presentation);
+        formdata.append("equivalence", this.state.equivalence);
+        formdata.append("unit_id", this.state.unit);
+        formdata.append("step", this.state.steps);
+        formdata.append("step_unit_id", this.state.stepsunit);
+        formdata.append("negligible", this.state.negligible);
+        formdata.append("expiration", this.state.expiration);
+        const Options = {
+          method: "POST",
+          body: formdata,
+          withCredentials: true,
+          headers: {
+            Authorization: bearer,
+          },
+        };
+        const respuesta = await fetch(
+          `http://3.219.6.57:5000/admin/product/${id}/subproduct`,
+          Options
+        );
+        const back = await respuesta.json();
+        this.setState({ loading: false });
+        swal("Done!", `${back.details}`, "success");
+        this.props.history.push(`/Index/ListaProducts`);
+      } catch (err) {
+        this.setState({
+          loading: false,
+        });
+        swal({
+          icon: "error",
+        });
+        console.log(err);
+      }
     }
   };
   render() {

@@ -23,9 +23,9 @@ export default class Register extends React.Component {
       this.state.name === "" ||
       this.state.surname === ""
     ) {
-      swal("Llene todos los campos!", {
+      swal("You need to fill all the fields!", {
         buttons: false,
-        timer: 2000,
+        timer: 3000,
       });
     } else {
       fd.append("name", this.state.name);

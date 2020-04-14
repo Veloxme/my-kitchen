@@ -53,32 +53,43 @@ export default class Tags extends React.Component {
   };
   handleSubmit = async (e) => {
     e.preventDefault();
-    this.setState({ loading: true });
-    let fd = new FormData();
-    fd.append("name", this.state.name);
-    const bearer = "Bearer " + localStorage.getItem("token");
-    const requestOptions = {
-      method: "POST",
-      body: fd,
-      withCredentials: true,
-      headers: {
-        Authorization: bearer,
-      },
-    };
-    try {
-      await fetch("http://3.219.6.57:5000/admin/tag", requestOptions);
-      this.setState({ loading: false });
-      document.getElementById("name").value = "";
-      swal("Hecho!", "El tag se a guardado con exito!", "success");
-      this.fetchCaregories();
-    } catch (err) {
-      this.setState({
-        loading: false,
+    if (this.state.name === "") {
+      swal("You need to fill the field!", {
+        buttons: false,
+        timer: 3000,
       });
-      swal({
-        icon: "error",
-      });
-      console.log(err);
+    } else {
+      this.setState({ loading: true });
+      let fd = new FormData();
+      fd.append("name", this.state.name);
+      const bearer = "Bearer " + localStorage.getItem("token");
+      const requestOptions = {
+        method: "POST",
+        body: fd,
+        withCredentials: true,
+        headers: {
+          Authorization: bearer,
+        },
+      };
+      try {
+        const response = await fetch(
+          "http://3.219.6.57:5000/admin/tag",
+          requestOptions
+        );
+        const respuesta = await response.json();
+        this.setState({ loading: false });
+        document.getElementById("name").value = "";
+        swal("Done!", `${respuesta.details}`, "success");
+        this.fetchCaregories();
+      } catch (err) {
+        this.setState({
+          loading: false,
+        });
+        swal({
+          icon: "error",
+        });
+        console.log(err);
+      }
     }
   };
   render() {

@@ -87,54 +87,68 @@ export default class Recipes extends React.Component {
   };
   handleSubmit = async (e) => {
     e.preventDefault();
-    this.setState({ loading: true });
-    let fd = new FormData();
-    fd.append("name", this.state.name);
-    fd.append("difficulty_id", this.state.difficulty);
-    fd.append("image", this.state.image);
-    fd.append("time", this.state.time);
-    fd.append("calories", this.state.calories);
-    const bearer = "Bearer " + localStorage.getItem("token");
-    const requestOptions = {
-      method: "POST",
-      body: fd,
-      withCredentials: true,
-      headers: {
-        Authorization: bearer,
-      },
-    };
-    try {
-      const response = await fetch(
-        "http://3.219.6.57:5000/admin/recipe",
-        requestOptions
-      );
-      const json = await response.json();
-      let id = json.content.id;
-      this.setState({ identidicador: id });
-      let formdata = new FormData();
-      const Options = {
+    if (
+      this.state.name === "" ||
+      this.state.difficulty === "" ||
+      this.state.image === "" ||
+      this.state.time === "" ||
+      this.state.calories === "" ||
+      this.state.tag === []
+    ) {
+      swal("You need to fill all the fields!", {
+        buttons: false,
+        timer: 3000,
+      });
+    } else {
+      this.setState({ loading: true });
+      let fd = new FormData();
+      fd.append("name", this.state.name);
+      fd.append("difficulty_id", this.state.difficulty);
+      fd.append("image", this.state.image);
+      fd.append("time", this.state.time);
+      fd.append("calories", this.state.calories);
+      const bearer = "Bearer " + localStorage.getItem("token");
+      const requestOptions = {
         method: "POST",
-        body: formdata,
+        body: fd,
         withCredentials: true,
         headers: {
           Authorization: bearer,
         },
       };
-      this.state.tag.map(async (tags) => {
-        formdata.append("tag_id", tags);
-        await fetch(`http://3.219.6.57:5000/admin/recipe/${id}/tag`, Options);
-      });
-      this.setState({ loading: false });
-      swal("Hecho!", "El producto se a guardado con exito!", "success");
-      this.props.history.push(`/Index/Recipes/${id}/Ingredients`);
-    } catch (err) {
-      this.setState({
-        loading: false,
-      });
-      swal({
-        icon: "error",
-      });
-      console.log(err);
+      try {
+        const response = await fetch(
+          "http://3.219.6.57:5000/admin/recipe",
+          requestOptions
+        );
+        const json = await response.json();
+        let id = json.content.id;
+        this.setState({ identidicador: id });
+        let formdata = new FormData();
+        const Options = {
+          method: "POST",
+          body: formdata,
+          withCredentials: true,
+          headers: {
+            Authorization: bearer,
+          },
+        };
+        this.state.tag.map(async (tags) => {
+          formdata.append("tag_id", tags);
+          await fetch(`http://3.219.6.57:5000/admin/recipe/${id}/tag`, Options);
+        });
+        this.setState({ loading: false });
+        swal("Done!", "The recipe was saved successfully!", "success");
+        this.props.history.push(`/Index/Recipes/${id}/Ingredients`);
+      } catch (err) {
+        this.setState({
+          loading: false,
+        });
+        swal({
+          icon: "error",
+        });
+        console.log(err);
+      }
     }
   };
   prueba = (e) => {

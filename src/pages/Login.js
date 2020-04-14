@@ -15,9 +15,9 @@ export default class Login extends React.Component {
   signIn = async (e) => {
     e.preventDefault();
     if (this.state.email === "" || this.state.password === "") {
-      swal("Llene todos los campos!", {
+      swal("You need to fill all the fields!", {
         buttons: false,
-        timer: 2000,
+        timer: 3000,
       });
     } else {
       let fd = new FormData();
@@ -42,7 +42,7 @@ export default class Login extends React.Component {
         const respuesta = await response.json();
         if (respuesta.content.token) {
           localStorage.setItem("token", respuesta.content.token);
-          swal("Hecho!", `${respuesta.details}`, "success");
+          swal("Done!", `${respuesta.details}`, "success");
           this.props.history.push("/Index");
         }
       } catch (err) {

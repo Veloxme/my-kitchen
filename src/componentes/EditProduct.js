@@ -176,9 +176,8 @@ export default class Products extends React.Component {
         Options
       );
       const back = await respuesta.json();
-      console.log(back);
       this.setState({ loading: false });
-      swal("Hecho!", "El producto se a modificado con exito!", "success");
+      swal("Done!", `${back.details}`, "success");
       this.props.history.push(`/Index/ListaProducts`);
     } catch (err) {
       this.setState({

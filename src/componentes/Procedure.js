@@ -79,43 +79,55 @@ export default class Procedure extends React.Component {
   };
   handleSubmit = async (e) => {
     e.preventDefault();
-    this.setState({ loading: true });
-    let fd = new FormData();
-    fd.append("step_number", this.state.step);
-    fd.append("description", this.state.description);
-    fd.append("ingredient_id", this.state.ingredient);
-    const bearer = "Bearer " + localStorage.getItem("token");
-    const requestOptions = {
-      method: "POST",
-      body: fd,
-      withCredentials: true,
-      headers: {
-        Authorization: bearer,
-      },
-    };
-    try {
-      await fetch(
-        `http://3.219.6.57:5000/admin/recipe/${this.state.identifi}/procedure`,
-        requestOptions
-      );
+    if (
+      this.state.step === "" ||
+      this.state.description === "" ||
+      this.state.ingredient === ""
+    ) {
+      swal("You need to fill all the fields!", {
+        buttons: false,
+        timer: 3000,
+      });
+    } else {
+      this.setState({ loading: true });
+      let fd = new FormData();
+      fd.append("step_number", this.state.step);
+      fd.append("description", this.state.description);
+      fd.append("ingredient_id", this.state.ingredient);
+      const bearer = "Bearer " + localStorage.getItem("token");
+      const requestOptions = {
+        method: "POST",
+        body: fd,
+        withCredentials: true,
+        headers: {
+          Authorization: bearer,
+        },
+      };
+      try {
+        const response = await fetch(
+          `http://3.219.6.57:5000/admin/recipe/${this.state.identifi}/procedure`,
+          requestOptions
+        );
 
-      this.setState({ loading: false });
-      swal("Hecho!", "El paso se a guardado con exito!", "success");
-      document.getElementById("description").value = "";
-      let y = this.state.step;
-      y += 1;
-      this.setState({
-        step: y,
-      });
-      document.getElementById("step").value = this.state.step;
-    } catch (err) {
-      this.setState({
-        loading: false,
-      });
-      swal({
-        icon: "error",
-      });
-      console.log(err);
+        this.setState({ loading: false });
+        const respuesta = await response.json();
+        swal("Done!", `${respuesta.details}`, "success");
+        document.getElementById("description").value = "";
+        let y = this.state.step;
+        y += 1;
+        this.setState({
+          step: y,
+        });
+        document.getElementById("step").value = this.state.step;
+      } catch (err) {
+        this.setState({
+          loading: false,
+        });
+        swal({
+          icon: "error",
+        });
+        console.log(err);
+      }
     }
   };
   procedure = async (e) => {

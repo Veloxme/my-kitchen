@@ -9,7 +9,7 @@ export default class Category extends React.Component {
     error: null,
     categorys: [],
     name: "",
-    image: ""
+    image: "",
   };
   componentDidMount() {
     this.fetchCaregories();
@@ -24,8 +24,8 @@ export default class Category extends React.Component {
       method: "GET",
       withCredentials: true,
       headers: {
-        Authorization: bearer
-      }
+        Authorization: bearer,
+      },
     };
     try {
       const response = await fetch(
@@ -36,58 +36,66 @@ export default class Category extends React.Component {
       const categorys = catego.content;
       this.setState({
         loading: false,
-        categorys
+        categorys,
       });
     } catch (error) {
       this.setState({
         loading: false,
-        error: error
+        error: error,
       });
       swal({
-        icon: "error"
+        icon: "error",
       });
     }
   };
 
-  changeHandler = e => {
+  changeHandler = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
-  fileSelectedHandler = e => {
+  fileSelectedHandler = (e) => {
     this.setState({ image: e.target.files[0] });
   };
-  handleSubmit = async e => {
+  handleSubmit = async (e) => {
     e.preventDefault();
-    this.setState({ loading: true });
-    let fd = new FormData();
-    fd.append("name", this.state.name);
-    fd.append("image", this.state.image);
-    const bearer = "Bearer " + localStorage.getItem("token");
-    const requestOptions = {
-      method: "POST",
-      body: fd,
-      withCredentials: true,
-      headers: {
-        Authorization: bearer
+    if (this.state.name === "" || this.state.image === "") {
+      swal("You need to fill all the fields!", {
+        buttons: false,
+        timer: 3000,
+      });
+    } else {
+      this.setState({ loading: true });
+      let fd = new FormData();
+      fd.append("name", this.state.name);
+      fd.append("image", this.state.image);
+      const bearer = "Bearer " + localStorage.getItem("token");
+      const requestOptions = {
+        method: "POST",
+        body: fd,
+        withCredentials: true,
+        headers: {
+          Authorization: bearer,
+        },
+      };
+      try {
+        const response = await fetch(
+          "http://3.219.6.57:5000/admin/product-category",
+          requestOptions
+        );
+        this.setState({ loading: false });
+        const respuesta = await response.json();
+        document.getElementById("name").value = "";
+        document.getElementById("file").value = "";
+        swal("Done!", `${respuesta.details}`, "success");
+        this.fetchCaregories();
+      } catch (err) {
+        this.setState({
+          loading: false,
+        });
+        swal({
+          icon: "error",
+        });
+        console.log(err);
       }
-    };
-    try {
-      await fetch(
-        "http://3.219.6.57:5000/admin/product-category",
-        requestOptions
-      );
-      this.setState({ loading: false });
-      document.getElementById("name").value = "";
-      document.getElementById("file").value = "";
-      swal("Hecho!", "La categoria se a guardado con exito!", "success");
-      this.fetchCaregories();
-    } catch (err) {
-      this.setState({
-        loading: false
-      });
-      swal({
-        icon: "error"
-      });
-      console.log(err);
     }
   };
   render() {
@@ -99,7 +107,7 @@ export default class Category extends React.Component {
       <div className="m-3 row">
         <div className="col">
           <ul className="list-group">
-            {this.state.categorys.map(cat => (
+            {this.state.categorys.map((cat) => (
               <li className="list-group-item" key={cat.id}>
                 {cat.name}
               </li>

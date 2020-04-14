@@ -79,39 +79,50 @@ export default class Ingredient extends React.Component {
   };
   handleSubmit = async (e) => {
     e.preventDefault();
-    this.setState({ loading: true });
-    let fd = new FormData();
-    fd.append("product_id", this.state.ingredient);
-    fd.append("quantity", this.state.quantity);
-    fd.append("unit_id", this.state.unit_id);
-    const bearer = "Bearer " + localStorage.getItem("token");
-    const requestOptions = {
-      method: "POST",
-      body: fd,
-      withCredentials: true,
-      headers: {
-        Authorization: bearer,
-      },
-    };
-
-    try {
-      await fetch(
-        `http://3.219.6.57:5000/admin/recipe/${this.state.identifi}/ingredient`,
-        requestOptions
-      );
-
-      this.setState({ loading: false });
-      swal("Hecho!", "El producto se a guardado con exito!", "success");
-      document.getElementById("ingredient").value = "";
-      document.getElementById("quantity").value = "";
-    } catch (err) {
-      this.setState({
-        loading: false,
+    if (
+      this.state.ingredient === "" ||
+      this.state.quantity === "" ||
+      this.state.unit_id === ""
+    ) {
+      swal("You need to fill all the fields!", {
+        buttons: false,
+        timer: 3000,
       });
-      swal({
-        icon: "error",
-      });
-      console.log(err);
+    } else {
+      this.setState({ loading: true });
+      let fd = new FormData();
+      fd.append("product_id", this.state.ingredient);
+      fd.append("quantity", this.state.quantity);
+      fd.append("unit_id", this.state.unit_id);
+      const bearer = "Bearer " + localStorage.getItem("token");
+      const requestOptions = {
+        method: "POST",
+        body: fd,
+        withCredentials: true,
+        headers: {
+          Authorization: bearer,
+        },
+      };
+
+      try {
+        const response = await fetch(
+          `http://3.219.6.57:5000/admin/recipe/${this.state.identifi}/ingredient`,
+          requestOptions
+        );
+        const respuesta = await response.json();
+        this.setState({ loading: false });
+        swal("Done!", `${respuesta.details}`, "success");
+        document.getElementById("ingredient").value = "";
+        document.getElementById("quantity").value = "";
+      } catch (err) {
+        this.setState({
+          loading: false,
+        });
+        swal({
+          icon: "error",
+        });
+        console.log(err);
+      }
     }
   };
   procedure = (e) => {
