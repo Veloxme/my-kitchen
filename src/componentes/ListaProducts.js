@@ -13,6 +13,7 @@ export default class ListaProducts extends React.Component {
     final: 10,
     numero: 0,
     tope: 0,
+    search: "",
   };
   componentDidMount() {
     this.fetchCaregories();
@@ -34,7 +35,7 @@ export default class ListaProducts extends React.Component {
     };
     try {
       const response = await fetch(
-        `http://3.219.6.57:5000/system/products`,
+        `http://3.219.6.57:5000/system/products/details`,
         requestOptions
       );
       const reci = await response.json();
@@ -68,6 +69,24 @@ export default class ListaProducts extends React.Component {
       swal({
         icon: "error",
       });
+    }
+  };
+  search = () => {
+    let algo = [];
+    if (this.state.search === "") {
+      this.fetchCaregories();
+    } else {
+      for (var x = 0; x < this.state.Recipes.length; x++) {
+        if (
+          this.state.search.toLowerCase() ===
+          this.state.Recipes[x].name.toLowerCase()
+        ) {
+          algo.push(this.state.Recipes[x]);
+          this.setState({
+            mostrar: algo,
+          });
+        }
+      }
     }
   };
   paginationplus = () => {
@@ -180,9 +199,27 @@ export default class ListaProducts extends React.Component {
       console.log(err);
     }
   };
+  changeHandler = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
   render() {
     return (
       <div className="container mt-3 mb-3">
+        <div className="row p-3">
+          <input
+            className="form-control col-9 mr-3 ml-3"
+            name="search"
+            placeholder="Search"
+            onChange={this.changeHandler}
+          />
+          <button
+            className="btn btn-outline-success col-2"
+            onClick={this.search}
+          >
+            Search
+          </button>
+        </div>
+
         <nav aria-label="Page navigation  ">
           <ul className="pagination justify-content-center">
             <li className="page-item ">
@@ -201,7 +238,7 @@ export default class ListaProducts extends React.Component {
         <ul className="list-group mt-3">
           {this.state.mostrar.map((rec) => (
             <li className="list-group-item" key={rec.id}>
-              {rec.name}
+              {`${rec.name}: ${rec.subproducts[0].presentation}`}
               <button
                 onClick={() => this.delete(rec.id)}
                 className="badge badge-danger badge-pill float-right"
