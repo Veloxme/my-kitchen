@@ -13,14 +13,14 @@ const PublicRoute = ({ component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={props =>
+      render={(props) =>
         notAuth() ? (
           <Component {...props} />
         ) : (
           <Redirect
             to={{
-              pathname: "/",
-              state: { message: "Usuário no autorizado" }
+              pathname: "/Index",
+              state: { message: "Usuário no autorizado" },
             }}
           />
         )
