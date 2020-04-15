@@ -78,7 +78,6 @@ export default class ModRecipe extends React.Component {
       name: this.state.producto.name,
       difficulty: this.state.producto.difficultyId,
       time: this.state.producto.time,
-      image: this.state.producto.image,
       calories: this.state.producto.calories,
     });
   };
@@ -94,7 +93,8 @@ export default class ModRecipe extends React.Component {
     let fd = new FormData();
     fd.append("name", this.state.name);
     fd.append("difficulty_id", this.state.difficulty);
-    fd.append("image", this.state.image);
+    var archivoBlob = new Blob([this.state.image], { type: "file" });
+    fd.append("image", archivoBlob);
     fd.append("time", this.state.time);
     fd.append("calories", this.state.calories);
     const bearer = "Bearer " + localStorage.getItem("token");
@@ -131,79 +131,93 @@ export default class ModRecipe extends React.Component {
       return <p className="text-center">error...</p>;
     }
     return (
-      <div className="card mx-auto mt-4 mb-1 col-md-6">
-        <h1 className=" card-header ">Recipe "{this.state.producto.name}"</h1>
-        <form className=" card-body " onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <label>Name</label>
-            <input
-              type="text"
-              className="form-control"
-              id="name"
-              name="name"
-              value={this.state.name}
-              onChange={this.changeHandler}
-            />
+      <div>
+        {this.state.loading && (
+          <div className="progress m-3">
+            <div
+              className="progress-bar progress-bar-striped progress-bar-animated"
+              role="progressbar"
+              aria-valuenow="75"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              style={{ width: "75%" }}
+            ></div>
           </div>
-          <div className="form-group">
-            <label>Image</label>
-            <div className="custom-file">
+        )}
+        <div className="card mx-auto mt-4 mb-1 col-md-6">
+          <h1 className=" card-header ">Recipe "{this.state.producto.name}"</h1>
+          <form className=" card-body " onSubmit={this.handleSubmit}>
+            <div className="form-group">
+              <label>Name</label>
               <input
-                type="file"
-                name="file"
-                className="custom-file-input"
-                id="file"
-                onChange={this.fileSelectedHandler}
+                type="text"
+                className="form-control"
+                id="name"
+                name="name"
+                value={this.state.name}
+                onChange={this.changeHandler}
               />
-              <label className="custom-file-label" htmlFor="file">
-                Choose file
-              </label>
             </div>
-          </div>
-          <div className="form-group">
-            <label>Difficulty</label>
-            <select
-              className="form-control"
-              id="difficulty"
-              name="difficulty"
-              onChange={this.changeHandler}
+            <div className="form-group">
+              <label>Image</label>
+              <div className="custom-file">
+                <input
+                  type="file"
+                  name="file"
+                  className="custom-file-input"
+                  id="file"
+                  onChange={this.fileSelectedHandler}
+                />
+                <label className="custom-file-label" htmlFor="file">
+                  Choose file
+                </label>
+              </div>
+            </div>
+            <div className="form-group">
+              <label>Difficulty</label>
+              <select
+                className="form-control"
+                id="difficulty"
+                name="difficulty"
+                onChange={this.changeHandler}
+              >
+                {this.state.difficulties.map((dif) => (
+                  <option key={dif.id} id={dif.id} value={dif.id}>
+                    {dif.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Time</label>
+              <input
+                type="number"
+                className="form-control"
+                id="time"
+                name="time"
+                value={this.state.time}
+                onChange={this.changeHandler}
+              />
+            </div>
+            <div className="form-group">
+              <label>Calories</label>
+              <input
+                type="number"
+                className="form-control"
+                id="calories"
+                name="calories"
+                value={this.state.calories}
+                onChange={this.changeHandler}
+              />
+            </div>
+            <button
+              className="btn btn-outline-success float-right"
+              disabled={loading}
             >
-              {this.state.difficulties.map((dif) => (
-                <option key={dif.id} id={dif.id} value={dif.id}>
-                  {dif.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="form-group">
-            <label>Time</label>
-            <input
-              type="number"
-              className="form-control"
-              id="time"
-              name="time"
-              value={this.state.time}
-              onChange={this.changeHandler}
-            />
-          </div>
-          <div className="form-group">
-            <label>Calories</label>
-            <input
-              type="number"
-              className="form-control"
-              id="calories"
-              name="calories"
-              value={this.state.calories}
-              onChange={this.changeHandler}
-            />
-          </div>
-          <button
-            className="btn btn-outline-success float-right"
-            disabled={loading}
-          >
-            {loading && <i className="fa fa-refresh fa-spin"></i>}Save
-          </button>
-        </form>
+              {loading && <i className="fa fa-refresh fa-spin"></i>}Save
+            </button>
+          </form>
+        </div>
       </div>
     );
   }

@@ -172,32 +172,46 @@ export default class Recipes extends React.Component {
       return <p className="text-center">error...</p>;
     }
     return (
-      <div className="card mx-auto mt-4 mb-1 col-md-6">
-        <h1 className=" card-header ">Recipe "{this.state.producto.name}"</h1>
-        <form className=" card-body " onSubmit={this.handleSubmit}>
-          <div className="row">
-            <label className="col-12">Tags</label>
-            {this.state.tags.map((tag) => (
-              <div key={tag.id} className="form-check form-check-inline col">
-                <input
-                  type="checkbox"
-                  className="form-check-input"
-                  id={tag.id}
-                  name="tag"
-                  value={tag.id}
-                  onChange={this.pushHandler}
-                />
-                <label>{tag.name}</label>
-              </div>
-            ))}
+      <div>
+        {this.state.loading && (
+          <div className="progress m-3">
+            <div
+              className="progress-bar progress-bar-striped progress-bar-animated"
+              role="progressbar"
+              aria-valuenow="75"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              style={{ width: "75%" }}
+            ></div>
           </div>
-          <button
-            className="btn btn-outline-success float-right"
-            disabled={loading}
-          >
-            {loading && <i className="fa fa-refresh fa-spin"></i>}Save
-          </button>
-        </form>
+        )}
+        <div className="card mx-auto mt-4 mb-1 col-md-6">
+          <h1 className=" card-header ">Recipe "{this.state.producto.name}"</h1>
+          <form className=" card-body " onSubmit={this.handleSubmit}>
+            <div className="row">
+              <label className="col-12">Tags</label>
+              {this.state.tags.map((tag) => (
+                <div key={tag.id} className="form-check form-check-inline col">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id={tag.id}
+                    name="tag"
+                    value={tag.id}
+                    onChange={this.pushHandler}
+                  />
+                  <label>{tag.name}</label>
+                </div>
+              ))}
+            </div>
+            <button
+              className="btn btn-outline-success float-right"
+              disabled={loading}
+            >
+              {loading && <i className="fa fa-refresh fa-spin"></i>}Save
+            </button>
+          </form>
+        </div>
       </div>
     );
   }

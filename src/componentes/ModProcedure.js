@@ -149,84 +149,98 @@ export default class ModProcedure extends React.Component {
       return <p className="text-center">error...</p>;
     }
     return (
-      <div className="m-3 row">
-        <div className="col">
-          <button
-            type="button"
-            className="btn btn-secondary btn-lg mb-3"
-            onClick={this.procedures}
-          >
-            New procedure
-          </button>
-          <ul className="list-group">
-            {this.state.procedure.map((x) => (
-              <li
-                className="list-group-item"
-                key={x.id}
-                onClick={() => this.enviar(x)}
-              >
-                <span className="badge badge-warning badge-pill mr-2">
-                  {x.stepNumber}
-                </span>
-                {x.description}
-                <button
-                  onClick={() => this.delete(x.id)}
-                  className="badge badge-danger badge-pill float-right"
-                >
-                  Delete
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="card col">
-          <h1 className="card-header">Procedure</h1>
-          <form className="card-body" onSubmit={this.handleSubmit}>
-            <div className="form-group">
-              <label>Step</label>
-              <input
-                type="text"
-                className="form-control"
-                id="step"
-                name="step"
-                value={this.state.step}
-                onChange={this.changeHandler}
-                disabled
-              />
-            </div>
-            <div className="form-group">
-              <label>ingredient</label>
-              <select
-                className="form-control"
-                id="ingredient"
-                name="ingredient"
-                onChange={this.changeHandler}
-              >
-                {this.state.ingredients.map((ing) => (
-                  <option key={ing.id} id={ing.product.name} value={ing.id}>
-                    {ing.product.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="form-group">
-              <label>Description</label>
-              <textarea
-                type="text"
-                className="form-control"
-                id="description"
-                name="description"
-                value={this.state.description}
-                onChange={this.changeHandler}
-              />
-            </div>
+      <div>
+        {this.state.loading && (
+          <div className="progress m-3">
+            <div
+              className="progress-bar progress-bar-striped progress-bar-animated"
+              role="progressbar"
+              aria-valuenow="75"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              style={{ width: "75%" }}
+            ></div>
+          </div>
+        )}
+        <div className="m-3 row">
+          <div className="col">
             <button
-              className="btn btn-outline-success float-right"
-              disabled={loading}
+              type="button"
+              className="btn btn-secondary btn-lg mb-3"
+              onClick={this.procedures}
             >
-              {loading && <i className="fa fa-refresh fa-spin"></i>}Save
+              New procedure
             </button>
-          </form>
+            <ul className="list-group">
+              {this.state.procedure.map((x) => (
+                <li
+                  className="list-group-item"
+                  key={x.id}
+                  onClick={() => this.enviar(x)}
+                >
+                  <span className="badge badge-warning badge-pill mr-2">
+                    {x.stepNumber}
+                  </span>
+                  {x.description}
+                  <button
+                    onClick={() => this.delete(x.id)}
+                    className="badge badge-danger badge-pill float-right"
+                  >
+                    Delete
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="card col">
+            <h1 className="card-header">Procedure</h1>
+            <form className="card-body" onSubmit={this.handleSubmit}>
+              <div className="form-group">
+                <label>Step</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="step"
+                  name="step"
+                  value={this.state.step}
+                  onChange={this.changeHandler}
+                  disabled
+                />
+              </div>
+              <div className="form-group">
+                <label>ingredient</label>
+                <select
+                  className="form-control"
+                  id="ingredient"
+                  name="ingredient"
+                  onChange={this.changeHandler}
+                >
+                  {this.state.ingredients.map((ing) => (
+                    <option key={ing.id} id={ing.product.name} value={ing.id}>
+                      {ing.product.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Description</label>
+                <textarea
+                  type="text"
+                  className="form-control"
+                  id="description"
+                  name="description"
+                  value={this.state.description}
+                  onChange={this.changeHandler}
+                />
+              </div>
+              <button
+                className="btn btn-outline-success float-right"
+                disabled={loading}
+              >
+                {loading && <i className="fa fa-refresh fa-spin"></i>}Save
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     );

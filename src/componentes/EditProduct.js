@@ -195,156 +195,170 @@ export default class Products extends React.Component {
       return <p className="text-center">error...</p>;
     }
     return (
-      <div className="card mx-auto mt-4 mb-1 col-md-7">
-        <h1 className=" card-header ">Products</h1>
-        <form className=" card-body " onSubmit={this.handleSubmit}>
-          <div className="row">
-            <div className="form-group col">
-              <label>Name</label>
+      <div>
+        {this.state.loading && (
+          <div className="progress m-3">
+            <div
+              className="progress-bar progress-bar-striped progress-bar-animated"
+              role="progressbar"
+              aria-valuenow="75"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              style={{ width: "75%" }}
+            ></div>
+          </div>
+        )}
+        <div className="card mx-auto mt-4 mb-1 col-md-7">
+          <h1 className=" card-header ">Products</h1>
+          <form className=" card-body " onSubmit={this.handleSubmit}>
+            <div className="row">
+              <div className="form-group col">
+                <label>Name</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="name"
+                  name="name"
+                  onChange={this.changeHandler}
+                  value={this.state.name}
+                />
+              </div>
+              <div className="form-group col">
+                <label>Image</label>
+                <div className="custom-file">
+                  <input
+                    type="file"
+                    name="file"
+                    className="custom-file-input"
+                    id="file"
+                    onChange={this.fileSelectedHandler}
+                  />
+                  <label className="custom-file-label" htmlFor="file">
+                    Choose file
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div className="form-group">
+              <label>Category</label>
+              <select
+                className="form-control"
+                id="category"
+                name="category"
+                onChange={this.changeHandler}
+              >
+                {this.state.categorys.map((cat) => (
+                  <option key={cat.id} id={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Presentation</label>
               <input
                 type="text"
                 className="form-control"
-                id="name"
-                name="name"
+                id="presentation"
+                name="presentation"
                 onChange={this.changeHandler}
-                value={this.state.name}
+                value={this.state.presentation}
               />
             </div>
-            <div className="form-group col">
-              <label>Image</label>
-              <div className="custom-file">
+            <div className="row">
+              <div className="form-group col">
+                <label>Equivalence</label>
                 <input
-                  type="file"
-                  name="file"
-                  className="custom-file-input"
-                  id="file"
-                  onChange={this.fileSelectedHandler}
+                  type="number"
+                  className="form-control"
+                  id="equivalence"
+                  name="equivalence"
+                  onChange={this.changeHandler}
+                  value={this.state.equivalence}
                 />
-                <label className="custom-file-label" htmlFor="file">
-                  Choose file
-                </label>
+              </div>
+              <div className="form-group col">
+                <label>Expiration</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  id="expiration"
+                  name="expiration"
+                  onChange={this.changeHandler}
+                  value={this.state.expiration}
+                />
               </div>
             </div>
-          </div>
-          <div className="form-group">
-            <label>Category</label>
-            <select
-              className="form-control"
-              id="category"
-              name="category"
-              onChange={this.changeHandler}
-            >
-              {this.state.categorys.map((cat) => (
-                <option key={cat.id} id={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
+            <div className="row">
+              <label className="col-12">Unit</label>
+              {this.state.units.map((unit) => (
+                <div
+                  key={unit.id}
+                  className="form-check form-check-inline col pl-3"
+                >
+                  <input
+                    type="radio"
+                    className="form-check-input"
+                    id={unit.name}
+                    name="unit"
+                    value={unit.id}
+                    onChange={this.changeHandler}
+                  />
+                  <label>{unit.name}</label>
+                </div>
               ))}
-            </select>
-          </div>
-          <div className="form-group">
-            <label>Presentation</label>
-            <input
-              type="text"
-              className="form-control"
-              id="presentation"
-              name="presentation"
-              onChange={this.changeHandler}
-              value={this.state.presentation}
-            />
-          </div>
-          <div className="row">
-            <div className="form-group col">
-              <label>Equivalence</label>
+            </div>
+
+            <div className="form-group">
+              <label>Steps</label>
               <input
                 type="number"
                 className="form-control"
-                id="equivalence"
-                name="equivalence"
+                id="steps"
+                name="steps"
                 onChange={this.changeHandler}
-                value={this.state.equivalence}
+                value={this.state.steps}
               />
             </div>
-            <div className="form-group col">
-              <label>Expiration</label>
+            <div className="row">
+              <label className="col-12">step unit</label>
+              {this.state.units.map((unit) => (
+                <div
+                  key={unit.id}
+                  className="form-check form-check-inline col pl-3"
+                >
+                  <input
+                    type="radio"
+                    className="form-check-input"
+                    id={`step${unit.id}`}
+                    name="stepsunit"
+                    value={unit.id}
+                    onChange={this.changeHandler}
+                  />
+                  <label>{unit.name}</label>
+                </div>
+              ))}
+            </div>
+            <div className="form-group ">
+              <label>Negligible</label>
               <input
                 type="number"
                 className="form-control"
-                id="expiration"
-                name="expiration"
+                id="negligible"
+                name="negligible"
                 onChange={this.changeHandler}
-                value={this.state.expiration}
+                value={this.state.negligible}
               />
             </div>
-          </div>
-          <div className="row">
-            <label className="col-12">Unit</label>
-            {this.state.units.map((unit) => (
-              <div
-                key={unit.id}
-                className="form-check form-check-inline col pl-3"
-              >
-                <input
-                  type="radio"
-                  className="form-check-input"
-                  id={unit.name}
-                  name="unit"
-                  value={unit.id}
-                  onChange={this.changeHandler}
-                />
-                <label>{unit.name}</label>
-              </div>
-            ))}
-          </div>
 
-          <div className="form-group">
-            <label>Steps</label>
-            <input
-              type="number"
-              className="form-control"
-              id="steps"
-              name="steps"
-              onChange={this.changeHandler}
-              value={this.state.steps}
-            />
-          </div>
-          <div className="row">
-            <label className="col-12">step unit</label>
-            {this.state.units.map((unit) => (
-              <div
-                key={unit.id}
-                className="form-check form-check-inline col pl-3"
-              >
-                <input
-                  type="radio"
-                  className="form-check-input"
-                  id={`step${unit.id}`}
-                  name="stepsunit"
-                  value={unit.id}
-                  onChange={this.changeHandler}
-                />
-                <label>{unit.name}</label>
-              </div>
-            ))}
-          </div>
-          <div className="form-group ">
-            <label>Negligible</label>
-            <input
-              type="number"
-              className="form-control"
-              id="negligible"
-              name="negligible"
-              onChange={this.changeHandler}
-              value={this.state.negligible}
-            />
-          </div>
-
-          <button
-            className="btn btn-outline-success float-right"
-            disabled={loading}
-          >
-            {loading && <i className="fa fa-refresh fa-spin"></i>}Save
-          </button>
-        </form>
+            <button
+              className="btn btn-outline-success float-right"
+              disabled={loading}
+            >
+              {loading && <i className="fa fa-refresh fa-spin"></i>}Save
+            </button>
+          </form>
+        </div>
       </div>
     );
   }

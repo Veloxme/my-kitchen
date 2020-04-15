@@ -139,58 +139,72 @@ export default class Procedure extends React.Component {
       return <p className="text-center">error...</p>;
     }
     return (
-      <div className="card mx-auto mt-4 mb-1 col-md-6">
-        <h1 className=" card-header ">Recipes</h1>
-        <form className=" card-body " onSubmit={this.handleSubmit}>
-          <div className="form-group">
-            <label>Step</label>
-            <input
-              type="text"
-              className="form-control"
-              id="step"
-              name="step"
-              onChange={this.changeHandler}
-              disabled
-            />
+      <div>
+        {this.state.loading && (
+          <div className="progress m-3">
+            <div
+              className="progress-bar progress-bar-striped progress-bar-animated"
+              role="progressbar"
+              aria-valuenow="75"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              style={{ width: "75%" }}
+            ></div>
           </div>
-          <div className="form-group">
-            <label>ingredient</label>
-            <select
-              className="form-control"
-              id="ingredient"
-              name="ingredient"
-              onChange={this.changeHandler}
+        )}
+        <div className="card mx-auto mt-4 mb-1 col-md-6">
+          <h1 className=" card-header ">Recipes</h1>
+          <form className=" card-body " onSubmit={this.handleSubmit}>
+            <div className="form-group">
+              <label>Step</label>
+              <input
+                type="text"
+                className="form-control"
+                id="step"
+                name="step"
+                onChange={this.changeHandler}
+                disabled
+              />
+            </div>
+            <div className="form-group">
+              <label>ingredient</label>
+              <select
+                className="form-control"
+                id="ingredient"
+                name="ingredient"
+                onChange={this.changeHandler}
+              >
+                {this.state.ingredients.map((ing) => (
+                  <option key={ing.id} value={ing.id}>
+                    {ing.product.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Description</label>
+              <textarea
+                type="text"
+                className="form-control"
+                id="description"
+                name="description"
+                onChange={this.changeHandler}
+              />
+            </div>
+            <button
+              className="btn btn-outline-success float-right"
+              disabled={loading}
             >
-              {this.state.ingredients.map((ing) => (
-                <option key={ing.id} value={ing.id}>
-                  {ing.product.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="form-group">
-            <label>Description</label>
-            <textarea
-              type="text"
-              className="form-control"
-              id="description"
-              name="description"
-              onChange={this.changeHandler}
-            />
-          </div>
+              {loading && <i className="fa fa-refresh fa-spin"></i>}Add
+            </button>
+          </form>
           <button
-            className="btn btn-outline-success float-right"
-            disabled={loading}
+            className="btn btn-outline-success mb-3"
+            onClick={this.procedure}
           >
-            {loading && <i className="fa fa-refresh fa-spin"></i>}Add
+            Exit
           </button>
-        </form>
-        <button
-          className="btn btn-outline-success mb-3"
-          onClick={this.procedure}
-        >
-          Exit
-        </button>
+        </div>
       </div>
     );
   }
