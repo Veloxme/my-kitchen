@@ -33,7 +33,15 @@ export default class Units extends React.Component {
         requestOptions
       );
       const unit = await response.json();
-      const units = unit.content;
+      const units = unit.content.sort((a, b) => {
+        if (a.name > b.name) {
+          return 1;
+        }
+        if (a.name < b.name) {
+          return -1;
+        }
+        return 0;
+      });
       this.setState({
         loading: false,
         units,
@@ -103,16 +111,29 @@ export default class Units extends React.Component {
     return (
       <div className="m-3 row">
         <div className="col">
-          <ul className="list-group">
-            {this.state.units.map((x) => (
-              <li className="list-group-item" key={x.id}>
-                {x.name}
-                <span className="badge badge-warning badge-pill">
-                  {x.prefix}
-                </span>
-              </li>
-            ))}
-          </ul>
+          {this.state.loading ? (
+            <div className="progress m-3">
+              <div
+                className="progress-bar progress-bar-striped progress-bar-animated"
+                role="progressbar"
+                aria-valuenow="75"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                style={{ width: "75%" }}
+              ></div>
+            </div>
+          ) : (
+            <ul className="list-group">
+              {this.state.units.map((x) => (
+                <li className="list-group-item" key={x.id}>
+                  {x.name}
+                  <span className="badge badge-warning badge-pill">
+                    {x.prefix}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
         <div className="card col">
           <h1 className="card-header">Units</h1>

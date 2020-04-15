@@ -8,6 +8,7 @@ export default class ListaRecipes extends React.Component {
     loading: false,
     error: null,
     Recipes: [],
+    offset: 0,
   };
   componentDidMount() {
     this.fetchCaregories();
@@ -29,10 +30,17 @@ export default class ListaRecipes extends React.Component {
     };
     try {
       const response = await fetch(
-        `http://3.219.6.57:5000/system/recipes?limit=50&offset=0`,
+        `http://3.219.6.57:5000/system/recipes?limit=10&offset=${this.state.offset}`,
         requestOptions
       );
       const reci = await response.json();
+      if (reci.content.length === 0) {
+        swal("It can not!", {
+          buttons: false,
+          timer: 2000,
+        });
+        this.Previous();
+      }
       const recipes = reci.content.sort((a, b) => {
         if (a.name > b.name) {
           return 1;
@@ -70,10 +78,13 @@ export default class ListaRecipes extends React.Component {
       },
     };
     try {
-      await fetch(`http://3.219.6.57:5000/admin/recipe/${e}`, requestOptions);
-
+      const response = await fetch(
+        `http://3.219.6.57:5000/admin/recipe/${e}`,
+        requestOptions
+      );
+      const respuesta = await response.json();
       this.setState({ loading: false });
-      swal("Hecho!", "La receta se a eliminado con exito!", "success");
+      swal("Done!", `${respuesta.details}`, "success");
       this.fetchCaregories();
     } catch (err) {
       this.setState({
@@ -85,28 +96,83 @@ export default class ListaRecipes extends React.Component {
       console.log(err);
     }
   };
+  Previous = () => {
+    if (this.state.offset === 0) {
+      swal("It can not!", {
+        buttons: false,
+        timer: 2000,
+      });
+    } else {
+      this.setState(
+        {
+          offset: this.state.offset - 10,
+        },
+        () => {
+          this.fetchCaregories();
+        }
+      );
+    }
+  };
+  Next = () => {
+    this.setState(
+      {
+        offset: this.state.offset + 10,
+      },
+      () => {
+        this.fetchCaregories();
+      }
+    );
+  };
   render() {
     return (
       <div className="container mt-3">
-        <ul className="list-group">
-          {this.state.Recipes.map((rec) => (
-            <li className="list-group-item" key={rec.id}>
-              {rec.name}
-              <button
-                onClick={() => this.delete(rec.id)}
-                className="badge badge-danger badge-pill float-right"
-              >
-                Delete
-              </button>
-              <button
-                onClick={() => this.put(rec.id)}
-                className="badge badge-warning badge-pill float-right mr-3"
-              >
-                Modify
-              </button>
+        <nav aria-label="Page navigation">
+          <ul className="pagination justify-content-center">
+            <li className="page-item ">
+              <span className="page-link" onClick={this.Previous}>
+                Previous
+              </span>
             </li>
-          ))}
-        </ul>
+
+            <li className="page-item">
+              <span className="page-link" onClick={this.Next}>
+                Next
+              </span>
+            </li>
+          </ul>
+        </nav>
+        {this.state.loading ? (
+          <div className="progress m-3">
+            <div
+              className="progress-bar progress-bar-striped progress-bar-animated"
+              role="progressbar"
+              aria-valuenow="75"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              style={{ width: "75%" }}
+            ></div>
+          </div>
+        ) : (
+          <ul className="list-group mt-3">
+            {this.state.Recipes.map((rec) => (
+              <li className="list-group-item" key={rec.id}>
+                {rec.name}
+                <button
+                  onClick={() => this.delete(rec.id)}
+                  className="badge badge-danger badge-pill float-right"
+                >
+                  Delete
+                </button>
+                <button
+                  onClick={() => this.put(rec.id)}
+                  className="badge badge-warning badge-pill float-right mr-3"
+                >
+                  Modify
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     );
   }

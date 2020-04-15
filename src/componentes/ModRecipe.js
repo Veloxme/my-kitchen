@@ -73,6 +73,7 @@ export default class ModRecipe extends React.Component {
         icon: "error",
       });
     }
+
     this.setState({
       name: this.state.producto.name,
       difficulty: this.state.producto.difficultyId,

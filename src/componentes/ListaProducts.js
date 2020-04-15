@@ -108,7 +108,7 @@ export default class ListaProducts extends React.Component {
         mostrar: algo,
       });
     } else if (this.state.tope === 1 || this.state.numero === 0) {
-      swal("No se puede", {
+      swal("It can not!", {
         buttons: false,
         timer: 2000,
       });
@@ -164,7 +164,7 @@ export default class ListaProducts extends React.Component {
         });
       }
     } else {
-      swal("No se puede", {
+      swal("It can not!", {
         buttons: false,
         timer: 2000,
       });
@@ -184,10 +184,13 @@ export default class ListaProducts extends React.Component {
       },
     };
     try {
-      await fetch(`http://3.219.6.57:5000/admin/product/${e}`, requestOptions);
-
+      const response = await fetch(
+        `http://3.219.6.57:5000/admin/product/${e}`,
+        requestOptions
+      );
+      const respuesta = await response.json();
       this.setState({ loading: false });
-      swal("Hecho!", "El producto se a eliminado con exito!", "success");
+      swal("Hecho!", `${respuesta.details}`, "success");
       this.fetchCaregories();
     } catch (err) {
       this.setState({
@@ -235,25 +238,38 @@ export default class ListaProducts extends React.Component {
             </li>
           </ul>
         </nav>
-        <ul className="list-group mt-3">
-          {this.state.mostrar.map((rec) => (
-            <li className="list-group-item" key={rec.id}>
-              {`${rec.name}: ${rec.subproducts[0].presentation}`}
-              <button
-                onClick={() => this.delete(rec.id)}
-                className="badge badge-danger badge-pill float-right"
-              >
-                Delete
-              </button>
-              <button
-                onClick={() => this.put(rec.id)}
-                className="badge badge-warning badge-pill float-right mr-3"
-              >
-                Modify
-              </button>
-            </li>
-          ))}
-        </ul>
+        {this.state.loading ? (
+          <div className="progress m-3">
+            <div
+              className="progress-bar progress-bar-striped progress-bar-animated"
+              role="progressbar"
+              aria-valuenow="75"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              style={{ width: "75%" }}
+            ></div>
+          </div>
+        ) : (
+          <ul className="list-group mt-3">
+            {this.state.mostrar.map((rec) => (
+              <li className="list-group-item" key={rec.id}>
+                {`${rec.name}: ${rec.subproducts[0].presentation}`}
+                <button
+                  onClick={() => this.delete(rec.id)}
+                  className="badge badge-danger badge-pill float-right"
+                >
+                  Delete
+                </button>
+                <button
+                  onClick={() => this.put(rec.id)}
+                  className="badge badge-warning badge-pill float-right mr-3"
+                >
+                  Modify
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     );
   }

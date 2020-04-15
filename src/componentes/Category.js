@@ -8,8 +8,13 @@ export default class Category extends React.Component {
     loading: false,
     error: null,
     categorys: [],
+    mostrar: [],
     name: "",
     image: "",
+    inicio: 0,
+    final: 10,
+    numero: 0,
+    tope: 0,
   };
   componentDidMount() {
     this.fetchCaregories();
@@ -33,10 +38,27 @@ export default class Category extends React.Component {
         requestOptions
       );
       const catego = await response.json();
-      const categorys = catego.content;
+      const categorys = catego.content.sort((a, b) => {
+        if (a.name > b.name) {
+          return 1;
+        }
+        if (a.name < b.name) {
+          return -1;
+        }
+        return 0;
+      });
+      const numero = categorys.length - 10;
       this.setState({
         loading: false,
         categorys,
+        numero,
+      });
+      let algo = [];
+      for (var i = this.state.inicio; i < this.state.final; i++) {
+        algo.push(this.state.categorys[i]);
+      }
+      this.setState({
+        mostrar: algo,
       });
     } catch (error) {
       this.setState({
@@ -48,7 +70,87 @@ export default class Category extends React.Component {
       });
     }
   };
+  paginationplus = () => {
+    let algo = [];
+    if (this.state.numero >= 10) {
+      let inicio = this.state.inicio + 10;
+      let final = this.state.final + 10;
+      let restar = this.state.numero - 10;
+      this.setState({
+        inicio,
+        final,
+        numero: restar,
+      });
 
+      for (var i = inicio; i < final; i++) {
+        algo.push(this.state.categorys[i]);
+      }
+      this.setState({
+        mostrar: algo,
+      });
+    } else if (this.state.tope === 1 || this.state.numero === 0) {
+      swal("It can not!", {
+        buttons: false,
+        timer: 2000,
+      });
+    } else {
+      let inicio = this.state.inicio + 10;
+      let final = this.state.final + this.state.numero;
+      this.setState({
+        inicio,
+        final,
+        tope: 1,
+      });
+
+      for (var x = inicio; x < final; x++) {
+        algo.push(this.state.categorys[x]);
+      }
+      this.setState({
+        mostrar: algo,
+      });
+    }
+  };
+  paginationmenus = () => {
+    if (this.state.inicio > 0) {
+      if (this.state.tope === 1) {
+        let algo = [];
+        let inicio = this.state.inicio - 10;
+        let final = this.state.final - this.state.numero;
+        this.setState({
+          inicio,
+          final,
+          tope: 0,
+        });
+        for (var i = inicio; i < final; i++) {
+          algo.push(this.state.categorys[i]);
+        }
+        this.setState({
+          mostrar: algo,
+        });
+      } else {
+        let algo = [];
+        let inicio = this.state.inicio - 10;
+        let final = this.state.final - 10;
+        let numero = this.state.numero + 10;
+        this.setState({
+          inicio,
+          final,
+          numero,
+        });
+        for (var x = inicio; x < final; x++) {
+          algo.push(this.state.categorys[x]);
+        }
+        this.setState({
+          mostrar: algo,
+        });
+      }
+    } else {
+      swal("It can not!", {
+        buttons: false,
+        timer: 2000,
+      });
+    }
+  };
   changeHandler = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -106,13 +208,41 @@ export default class Category extends React.Component {
     return (
       <div className="m-3 row">
         <div className="col">
-          <ul className="list-group">
-            {this.state.categorys.map((cat) => (
-              <li className="list-group-item" key={cat.id}>
-                {cat.name}
+          <nav aria-label="Page navigation  ">
+            <ul className="pagination justify-content-center">
+              <li className="page-item ">
+                <span className="page-link" onClick={this.paginationmenus}>
+                  Previous
+                </span>
               </li>
-            ))}
-          </ul>
+
+              <li className="page-item">
+                <span className="page-link" onClick={this.paginationplus}>
+                  Next
+                </span>
+              </li>
+            </ul>
+          </nav>
+          {this.state.loading ? (
+            <div className="progress m-3">
+              <div
+                className="progress-bar progress-bar-striped progress-bar-animated"
+                role="progressbar"
+                aria-valuenow="75"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                style={{ width: "75%" }}
+              ></div>
+            </div>
+          ) : (
+            <ul className="list-group mt-3">
+              {this.state.mostrar.map((cat) => (
+                <li className="list-group-item" key={cat.id}>
+                  {cat.name}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
         <div className="card col">
           <h1 className="card-header">Categorys</h1>

@@ -107,7 +107,6 @@ export default class Products extends React.Component {
         "selected";
       this.setState({
         name: this.state.producto.name,
-        image: this.state.producto.image,
         category: this.state.producto.productcategoryId,
         presentation: this.state.detalles.presentation,
         equivalence: this.state.detalles.equivalence,
@@ -140,7 +139,8 @@ export default class Products extends React.Component {
     let fd = new FormData();
     fd.append("name", this.state.name);
     fd.append("productCategory_id", this.state.category);
-    fd.append("image", this.state.image);
+    var archivoBlob = new Blob([this.state.image], { type: "file" });
+    fd.append("image", archivoBlob);
     const bearer = "Bearer " + localStorage.getItem("token");
     const requestOptions = {
       method: "PUT",
