@@ -308,17 +308,29 @@ export default class Products extends React.Component {
                 </div>
               ))}
             </div>
-
-            <div className="form-group">
-              <label>Steps</label>
-              <input
-                type="number"
-                className="form-control"
-                id="steps"
-                name="steps"
-                onChange={this.changeHandler}
-                value={this.state.steps}
-              />
+            <div className="row">
+              <div className="form-group col">
+                <label>Steps</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  id="steps"
+                  name="steps"
+                  onChange={this.changeHandler}
+                  value={this.state.steps}
+                />
+              </div>
+              <div className="form-group col">
+                <label>Negligible</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  id="negligible"
+                  name="negligible"
+                  onChange={this.changeHandler}
+                  value={this.state.negligible}
+                />
+              </div>
             </div>
             <div className="row">
               <label className="col-12">step unit</label>
@@ -339,18 +351,6 @@ export default class Products extends React.Component {
                 </div>
               ))}
             </div>
-            <div className="form-group ">
-              <label>Negligible</label>
-              <input
-                type="number"
-                className="form-control"
-                id="negligible"
-                name="negligible"
-                onChange={this.changeHandler}
-                value={this.state.negligible}
-              />
-            </div>
-
             <button
               className="btn btn-outline-success float-right"
               disabled={loading}

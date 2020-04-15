@@ -206,26 +206,29 @@ export default class Recipes extends React.Component {
               ))}
             </select>
           </div>
-          <div className="form-group">
-            <label>Time</label>
-            <input
-              type="number"
-              className="form-control"
-              id="time"
-              name="time"
-              onChange={this.changeHandler}
-            />
+          <div className="row">
+            <div className="form-group col">
+              <label>Time</label>
+              <input
+                type="number"
+                className="form-control"
+                id="time"
+                name="time"
+                onChange={this.changeHandler}
+              />
+            </div>
+            <div className="form-group col">
+              <label>Calories</label>
+              <input
+                type="number"
+                className="form-control"
+                id="calories"
+                name="calories"
+                onChange={this.changeHandler}
+              />
+            </div>
           </div>
-          <div className="form-group">
-            <label>Calories</label>
-            <input
-              type="number"
-              className="form-control"
-              id="calories"
-              name="calories"
-              onChange={this.changeHandler}
-            />
-          </div>
+
           <div className="row">
             <label className="col-12">Tags</label>
             {this.state.tags.map((tag) => (

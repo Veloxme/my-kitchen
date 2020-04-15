@@ -155,7 +155,7 @@ export default class Recipes extends React.Component {
         }
       }
       swal("Done!", "Tags have been successfully modified!", "success");
-      this.props.history.push(`/Index/ListaRecipes`);
+      this.props.history.push(`/Index/MenuMod/${this.state.id}`);
     } catch (err) {
       this.setState({
         loading: false,

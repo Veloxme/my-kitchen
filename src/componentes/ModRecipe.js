@@ -114,7 +114,7 @@ export default class ModRecipe extends React.Component {
       const json = await response.json();
       this.setState({ loading: false });
       swal("Hecho!", `${json.details}`, "success");
-      this.props.history.push(`/Index/ListaRecipes`);
+      this.props.history.push(`/Index/MenuMod/${this.state.id}`);
     } catch (err) {
       this.setState({
         loading: false,
